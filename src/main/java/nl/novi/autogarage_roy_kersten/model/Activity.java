@@ -1,4 +1,4 @@
-package nl.novi.autogarage_roy_kersten;
+package nl.novi.autogarage_roy_kersten.model;
 
 public class Activity extends Item {
 

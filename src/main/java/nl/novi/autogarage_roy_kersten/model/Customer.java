@@ -1,4 +1,9 @@
-package nl.novi.autogarage_roy_kersten;
+package nl.novi.autogarage_roy_kersten.model;
+
+/**
+ * De Customer Class zorgt ervoor dat nieuwe klanten kunnen worden geregistreerd.
+ * De klasse bevat standaard informatie over de klant.
+ */
 
 public class Customer {
 

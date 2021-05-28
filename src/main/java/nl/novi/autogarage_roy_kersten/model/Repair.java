@@ -1,8 +1,8 @@
-package nl.novi.autogarage_roy_kersten;
+package nl.novi.autogarage_roy_kersten.model;
 
 import java.util.Date;
 
-public class Repair extends Service{
+public class Repair extends Service {
 
     //attributes
     private String issuesToRepair;

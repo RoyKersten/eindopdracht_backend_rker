@@ -1,6 +1,5 @@
-package nl.novi.autogarage_roy_kersten;
+package nl.novi.autogarage_roy_kersten.model;
 
-import javax.print.DocFlavor;
 import java.util.Date;
 
 public abstract class Service {
