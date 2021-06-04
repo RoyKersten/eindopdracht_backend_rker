@@ -1,17 +1,17 @@
 package nl.novi.autogarage_roy_kersten.service;
 
 import nl.novi.autogarage_roy_kersten.model.Customer;
-
+import org.springframework.stereotype.Service;
 import java.util.List;
 
+@Service
 public interface CustomerService {
 
-
-    List<Customer> getAllCustomer ();
-    Customer getCustomerById (int idCustomer);
-    Customer addCustomer (Customer customer);
-    void deleteCustomerById(int idCustomer);
-    void updateCustomerById(int idCustomer, Customer customer);
+    List<Customer> getAllCustomers();
+    Customer getCustomerById (long idCustomer);
+    long addCustomer (Customer customer);
+    void deleteCustomerById(long idCustomer);
+    void updateCustomerById(long idCustomer, Customer customer);
 
 
 

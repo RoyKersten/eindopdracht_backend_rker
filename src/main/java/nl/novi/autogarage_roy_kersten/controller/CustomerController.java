@@ -5,26 +5,35 @@ import nl.novi.autogarage_roy_kersten.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URI;
 
 /**
  * De CustomerController Class zorgt ervoor dat HTTP Requests en Responses worden aangenomen en afgehandeld.
- * <p>
+ *
  * GET request kan voor alle klanten tegelijk of per idCustomer worden opgevraagd.
  * path: "/customers" of  path:"/customers/{idCustomer}"
- * <p>
- * POST request wordt per Customer object aangenomen, voorwaarde JSON moet gelijk zijn aan Customer Object.
- * path: "/customers"
- * <p>
+ *
+ * POST request wordt per Customer object aangenomen, voorwaarde JSON moet gelijk zijn aan Customer Object, idcustomer wordt automatisch aangemaakt en met 1 opgehoogd
+ *  * path: "/customers"
+ *
  * DELETE request moet per idCustomer worden gedefinieerd.
  * path: "/customers/{idCustomer}"
- * <p>
+ *
  * PUT request moet per idCustomer worden gedefinieerd.
  * path: "/customers/{idCustomer}"
- * <p>
- * JSON:
+ *
+ *
+ *  JSON with GET (all customers) and POST (add new customer)
+ *  {
+ *  "firstName": "Roy",
+ *  "lastName": "Kersten",
+ *  "phoneNumber": "0612345678",
+ *  "email": "rkersten@gmail.nl"
+ *  }
+ *
+ * JSON with GET (by ID), PUT (update Customer) and DELETE (delete Customer)
  * {
  * "idCustomer": 1,
  * "firstName": "Roy",
@@ -36,33 +45,35 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/customers")                                                           //End point "/customer"
+@CrossOrigin
+@RequestMapping(value = "/customers")                                                           //End point "/customer"
 public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
 
-    List<Customer> customers = new ArrayList<>(); //weghalen
+    @PostMapping (value = "")
+    public ResponseEntity<Object> addCustomer(@RequestBody Customer customer) {
+        long newId = customerService.addCustomer(customer);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idCustomer}")
+                .buildAndExpand(newId).toUri();
+
+        return ResponseEntity.created(location).body(location);
+    }
 
     //Get all Customers
-    @GetMapping()
+    @GetMapping(value = "")
     public ResponseEntity<Object> getAllCustomers() {
-        return ResponseEntity.ok(customerService.getAllCustomer());
+        return ResponseEntity.ok(customerService.getAllCustomers());
     }
 
 
-    //Get customer by idCustomer
+   //Get customer by idCustomer
     @GetMapping("/{idCustomer}")
     public ResponseEntity<Object> getCustomerById(@PathVariable("idCustomer") int idCustomer) {
         Customer customer = customerService.getCustomerById(idCustomer);
         return ResponseEntity.ok(customer);
-    }
-
-    //Add a new Customer
-    @PostMapping()
-    public ResponseEntity<Object> addCustomer(@RequestBody Customer customer) {
-        customerService.addCustomer(customer);
-        return ResponseEntity.ok("customer added successfully");
     }
 
 
@@ -79,6 +90,8 @@ public class CustomerController {
         customerService.updateCustomerById(idCustomer, updateCustomer);
         return ResponseEntity.ok("update customer successfully");
     }
+
+
 }
 
 
