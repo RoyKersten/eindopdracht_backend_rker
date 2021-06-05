@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 
 /**
- * De Customer Class zorgt ervoor dat nieuwe klanten kunnen worden geregistreerd.
- * De klasse bevat standaard informatie over de klant.
+ * The Customer class is the blueprint for all Customer objects.
+ * A customer object contains all basic information of a customer like: firstName, LastName, phoneNumber and email.
  */
 
 @Entity
@@ -37,7 +37,10 @@ public class Customer {
 
 
     //Constructors
-    public Customer() {};
+    public Customer() {
+    }
+
+    ;
 
 
     public Customer(Long idCustomer, String firstName, String lastName, String phoneNumber, String email) {
@@ -97,7 +100,6 @@ public class Customer {
     public void setEmail(String email) {
         this.email = email;
     }
-
 
 
 }
