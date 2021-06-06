@@ -1,18 +1,46 @@
 package nl.novi.autogarage_roy_kersten.model;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
+
+
+/**
+ * The Car class is the blueprint for all Car objects.
+ * A Car object contains all basic information of a car like: brand, model, year_of_construction and license_plate_number.
+ */
+
+@Entity
+@Table(name = "car")
 public class Car {
 
     // Attributes
-    private int idCar;
-    private String brand;
-    private String model;
-    private String yearOfConstruction;
-    private String licensePlateNumber;
-    private Customer customer;              // see also constructor
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idCar;
 
+    @Column(name = "brand")
+    private String brand;
+
+    @Column(name = "model")
+    private String model;
+
+    @Column(name = "year_of_construction")
+    private String yearOfConstruction;
+
+    @Column(name = "license_plate_number")
+    private String licensePlateNumber;
+
+    @ManyToOne
+    private Customer customer;
+
+    @JsonIgnoreProperties("car")
 
     // Constructors
-    public Car(int idCar, String brand, String model, String yearOfConstruction, String licensePlateNumber, Customer customer) {
+    public Car() {}
+
+    public Car(Long idCar, String brand, String model, String yearOfConstruction, String licensePlateNumber, Customer customer) {
         this.idCar = idCar;
         this.brand = brand;
         this.model = model;
@@ -22,11 +50,11 @@ public class Car {
     }
 
     // Getters and Setters
-    public int getIdCar() {
+    public Long getIdCar() {
         return idCar;
     }
 
-    public void setIdCar(int idCar) {
+    public void setIdCar(Long idCar) {
         this.idCar = idCar;
     }
 
@@ -61,6 +89,7 @@ public class Car {
     public void setLicensePlateNumber(String licensePlateNumber) {
         this.licensePlateNumber = licensePlateNumber;
     }
+
 
     public Customer getCustomer() {
         return customer;

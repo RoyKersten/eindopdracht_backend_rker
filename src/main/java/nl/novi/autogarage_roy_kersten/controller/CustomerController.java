@@ -28,28 +28,30 @@ import java.net.URI;
  * <p>
  * <p>
  * JSON with GET (get all customers and POST (add new customer)
- * {
- * "firstName": "Roy",
- * "lastName": "Kersten",
- * "phoneNumber": "0612345678",
- * "email": "rkersten@gmail.nl"
- * }
+ * localhost:8080/customers
+ *  {
+ *      "firstName": "Roy",
+ *      "lastName": "Kersten",
+ *      "phoneNumber": "0612345678",
+ *      "email": "rkersten@gmail.nl"
+ *  }
  * <p>
- * JSON with GET (get by ID), PUT (update Customer) and DELETE (delete Customer) => idCustomer should be added !
- * {
- * "idCustomer": 1,
- * "firstName": "Roy",
- * "lastName": "Kersten",
- * "phoneNumber": "0612345678",
- * "email": "rkersten@gmail.nl"
- * }
+ *
+ * JSON with GET (get by ID), PUT (update Customer) and DELETE (delete Customer) => idCustomer should be added in these cases !
+ * localhost:8080/customers/1
+ *  {
+ *      "idCustomer": 1,
+ *      "firstName": "Roy",
+ *      "lastName": "Kersten",
+ *      "phoneNumber": "0612345678",
+ *      "email": "rkersten@gmail.nl"
+ *  }
  */
 
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/customers")
-//End point "/customer"
+@RequestMapping(value = "/customers")                               //End point "/customer"
 public class CustomerController {
 
     //Attributes

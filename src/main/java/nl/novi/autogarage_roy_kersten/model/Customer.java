@@ -1,9 +1,9 @@
 package nl.novi.autogarage_roy_kersten.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+
 
 /**
  * The Customer class is the blueprint for all Customer objects.
@@ -32,16 +32,12 @@ public class Customer {
     @Column(name = "email")
     private String email;
 
-    //@OneToMany(mappedBy = "customer")
     @JsonIgnoreProperties("customer")
 
 
     //Constructors
     public Customer() {
     }
-
-    ;
-
 
     public Customer(Long idCustomer, String firstName, String lastName, String phoneNumber, String email) {
         this.idCustomer = idCustomer;
@@ -50,6 +46,7 @@ public class Customer {
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
+
 
     //Getters and Setters
     public Long getIdCustomer() {
@@ -100,6 +97,5 @@ public class Customer {
     public void setEmail(String email) {
         this.email = email;
     }
-
 
 }
