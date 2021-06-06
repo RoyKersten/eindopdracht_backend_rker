@@ -90,7 +90,7 @@ public class CarController {
 
     //Get customer by idCar
     @GetMapping("/{idCar}")
-    public ResponseEntity<Object> getCustomerById(@PathVariable("idCar") long idCar) {
+    public ResponseEntity<Object> getCarById(@PathVariable("idCar") long idCar) {
         Car car = carService.getCarById(idCar);
         return ResponseEntity.ok(car);
     }

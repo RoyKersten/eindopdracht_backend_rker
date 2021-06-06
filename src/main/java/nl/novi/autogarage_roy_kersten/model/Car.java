@@ -1,8 +1,5 @@
 package nl.novi.autogarage_roy_kersten.model;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 
 
@@ -33,9 +30,10 @@ public class Car {
     private String licensePlateNumber;
 
     @ManyToOne
+    //@Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Customer customer;
 
-    @JsonIgnoreProperties("car")
+    //@JsonIgnoreProperties("car")
 
     // Constructors
     public Car() {}

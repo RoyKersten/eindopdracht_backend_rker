@@ -79,7 +79,7 @@ public class CarServiceImpl implements CarService{
         storedCar.setYearOfConstruction(updateCar.getYearOfConstruction());
         storedCar.setLicensePlateNumber(updateCar.getLicensePlateNumber());
         storedCar.setCustomer(updateCar.getCustomer());                                         //TO BE CHECKED !!!!!!!!
-        carRepository.saveAndFlush(updateCar);
+        carRepository.save(updateCar);
     }
 
 }

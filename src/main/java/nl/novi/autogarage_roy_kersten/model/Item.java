@@ -1,17 +1,40 @@
 package nl.novi.autogarage_roy_kersten.model;
 
-public class Item {
+import javax.persistence.*;
+
+/**
+ * The Item class is an abstract class and is the super class of Part and Activity class which are the blueprint classes.
+  */
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)                   // Set Strategy SINGLE_TABLE => Create one table for all subclasses with a subclass type column to differentiate between subclasses
+@DiscriminatorColumn(name = "item_type")
+@Table(name = "item")
+public abstract class Item {
 
     //Attributes
-    private int idItem;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idItem;
+
+    @Column (name  = "item_name")
     private String itemName;
+
+    @Column (name = "qty")
     private int qty;
+
+    @Column (name = "price")
     private float price;
+
+    @Column (name = "item_category")
     private String itemCategory;
 
-    //Constructors
+    //@JsonIgnoreProperties("item")
 
-    public Item(int idItem, String itemName, int qty, float price, String itemCategory) {
+    //Constructors
+    public Item () {}
+
+    public Item(Long idItem, String itemName, int qty, float price, String itemCategory) {
         this.idItem = idItem;
         this.itemName = itemName;
         this.qty = qty;
@@ -21,11 +44,11 @@ public class Item {
 
     //Getters and Setters
 
-    public int getIdItem() {
+    public Long getIdItem() {
         return idItem;
     }
 
-    public void setIdItem(int idItem) {
+    public void setIdItem(Long idItem) {
         this.idItem = idItem;
     }
 
