@@ -1,27 +1,36 @@
 package nl.novi.autogarage_roy_kersten.model;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+
+@Entity
+@DiscriminatorValue("inspection_invoice")
 public class InspectionInvoice extends Invoice {
 
     //attributes
-    private Inspection inspection;
+    @OneToOne
+    private Service service;
 
 
 //constructor
+    public InspectionInvoice() {}
 
-    public InspectionInvoice(int idInvoice, String invoiceStatus, Customer customer, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal) {
+    public InspectionInvoice(int idInvoice, String invoiceStatus, Customer customer, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, Service service) {
         super(idInvoice, invoiceStatus, customer, lineTotal, invoiceSubtotal, vatRate, vatAmount, invoiceTotal);
-        this.inspection = inspection;
+        this.service = service;
 
     }
 
 //getters and setters
 
-    public Inspection getInspection() {
-        return inspection;
+    public Service getInspection() {
+        return service;
     }
 
-    public void setInspection(Inspection inspection) {
-        this.inspection = inspection;
+    public void setInspection(Service inspection) {
+        this.service = service;
     }
 
 

@@ -1,6 +1,7 @@
 package nl.novi.autogarage_roy_kersten.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * The Item class is an abstract class and is the super class of Part and Activity class which are the blueprint classes.
@@ -28,6 +29,9 @@ public abstract class Item {
 
     @Column (name = "item_category")
     private String itemCategory;
+
+    @OneToMany (mappedBy = "item")
+    private List<ServiceLine> serviceLine;
 
     //@JsonIgnoreProperties("item")
 

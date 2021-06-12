@@ -4,28 +4,37 @@ import nl.novi.autogarage_roy_kersten.model.Customer;
 import nl.novi.autogarage_roy_kersten.model.Invoice;
 import nl.novi.autogarage_roy_kersten.model.Repair;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+
+@Entity
+@DiscriminatorValue("repair_invoice")
 public class RepairInvoice extends Invoice {
 
     //attributes
-    private Repair repair;
+    @OneToOne
+    private Service service;
 
 
 //constructor
+    public RepairInvoice() {}
 
-    public RepairInvoice(int idInvoice, String invoiceStatus, Customer customer, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal) {
+    public RepairInvoice(int idInvoice, String invoiceStatus, Customer customer, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, Service service) {
         super(idInvoice, invoiceStatus, customer, lineTotal, invoiceSubtotal, vatRate, vatAmount, invoiceTotal);
-        this.repair = repair;
+        this.service = service;
 
     }
 
 //getters and setters
 
-    public Repair getRepair() {
-        return repair;
+    public Service getRepair() {
+        return service;
     }
 
-    public void setRepair(Repair repair) {
-        this.repair = repair;
+    public void setRepair(Service repair) {
+        this.service = service;
     }
 
 

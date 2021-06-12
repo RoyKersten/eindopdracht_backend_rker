@@ -1,6 +1,7 @@
 package nl.novi.autogarage_roy_kersten.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 /**
@@ -28,6 +29,9 @@ public class Car {
 
     @Column(name = "license_plate_number")
     private String licensePlateNumber;
+
+    @OneToMany
+    private List<Service> service;
 
     @ManyToOne
     //@Cascade(org.hibernate.annotations.CascadeType.ALL)

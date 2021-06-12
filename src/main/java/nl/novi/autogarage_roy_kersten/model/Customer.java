@@ -3,6 +3,7 @@ package nl.novi.autogarage_roy_kersten.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 /**
@@ -31,6 +32,15 @@ public class Customer {
 
     @Column(name = "email")
     private String email;
+
+    @OneToMany (mappedBy = "customer")
+    private List<Invoice> invoice;
+
+    @OneToMany (mappedBy = "customer")
+    private List<Car> car;
+
+    @OneToMany (mappedBy = "customer")
+    private List<Service> service;
 
     @JsonIgnoreProperties("customer")
 

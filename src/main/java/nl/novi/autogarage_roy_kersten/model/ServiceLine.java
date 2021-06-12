@@ -4,20 +4,44 @@ import nl.novi.autogarage_roy_kersten.model.Invoice;
 import nl.novi.autogarage_roy_kersten.model.Item;
 import nl.novi.autogarage_roy_kersten.model.Service;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "service_line")
 public class ServiceLine {
 
     //attributes
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idServiceLine;
+
+    @Column(name = "service_line_number")
     private int serviceLineNumber;
+
+    @Column(name = "qty")
     private int qty;
+
+    @Column (name = "item_name")
     private String itemName;
+
+    @Column (name = "price")
     private float price;
+
+    @Column (name = "line_total")
     private float lineTotal;
+
+    @ManyToOne
     private Item item;
+
+    @ManyToOne
     private Service service;
+
+    @ManyToOne
     private Invoice invoice;
 
     //constructor
+    public ServiceLine () {}
+
 
     public ServiceLine(int idServiceLine, int serviceLineNumber, int qty, String itemName, float price, float lineTotal, Item item, Service service, Invoice invoice) {
         this.idServiceLine = idServiceLine;
