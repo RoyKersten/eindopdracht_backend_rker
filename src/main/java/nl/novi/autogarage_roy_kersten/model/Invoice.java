@@ -1,5 +1,8 @@
 package nl.novi.autogarage_roy_kersten.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import nl.novi.autogarage_roy_kersten.model.Customer;
 
 import javax.persistence.*;
@@ -10,13 +13,21 @@ import java.util.List;
 // Set Strategy SINGLE_TABLE => Create one table for all subclasses with a subclass type column to differentiate between subclasses
 @DiscriminatorColumn(name = "invoice_type")
 @Table(name = "invoice")
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = InspectionInvoice.class, name = "inspection_invoice"),
+        @JsonSubTypes.Type(value = RepairInvoice.class, name = "repair_invoice"),
+})
+
 public abstract class Invoice {
 
 
     //attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idInvoice;
+    private Long idInvoice;
 
     @Column(name = "invoice_status")
     private String invoiceStatus;
@@ -49,7 +60,7 @@ public abstract class Invoice {
     public Invoice() {
     }
 
-    public Invoice(int idInvoice, String invoiceStatus, Customer customer, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal) {
+    public Invoice(Long idInvoice, String invoiceStatus, Customer customer, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal) {
         this.idInvoice = idInvoice;
         this.invoiceStatus = invoiceStatus;
         this.customer = customer;
@@ -66,11 +77,11 @@ public abstract class Invoice {
     //Getters and Setters
 
 
-    public int getIdInvoice() {
+    public Long getIdInvoice() {
         return idInvoice;
     }
 
-    public void setIdInvoice(int idInvoice) {
+    public void setIdInvoice(Long idInvoice) {
         this.idInvoice = idInvoice;
     }
 

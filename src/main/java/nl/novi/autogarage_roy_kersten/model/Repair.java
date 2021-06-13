@@ -17,7 +17,7 @@ public class Repair extends Service {
     //constructor
     public Repair () {}
 
-    public Repair(int idService, Date serviceDate, String serviceStatus, Customer customer, List<ServiceLine> serviceLine, String issuesToRepair, Car car) {
+    public Repair(Long idService, Date serviceDate, String serviceStatus, Customer customer, List<ServiceLine> serviceLine, String issuesToRepair, Car car) {
         super(idService, serviceDate, serviceStatus, customer, serviceLine, car);
         this.issuesToRepair = issuesToRepair;
     }

@@ -1,19 +1,25 @@
 package nl.novi.autogarage_roy_kersten.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import nl.novi.autogarage_roy_kersten.model.Invoice;
 import nl.novi.autogarage_roy_kersten.model.Item;
 import nl.novi.autogarage_roy_kersten.model.Service;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "service_line")
+
 public class ServiceLine {
 
     //attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idServiceLine;
+    private Long idServiceLine;
 
     @Column(name = "service_line_number")
     private int serviceLineNumber;
@@ -31,19 +37,22 @@ public class ServiceLine {
     private float lineTotal;
 
     @ManyToOne
+    //@JsonBackReference
     private Item item;
 
     @ManyToOne
+   // @JsonBackReference ()
     private Service service;
 
     @ManyToOne
+   // @JsonBackReference
     private Invoice invoice;
 
     //constructor
     public ServiceLine () {}
 
 
-    public ServiceLine(int idServiceLine, int serviceLineNumber, int qty, String itemName, float price, float lineTotal, Item item, Service service, Invoice invoice) {
+    public ServiceLine(Long idServiceLine, int serviceLineNumber, int qty, String itemName, float price, float lineTotal, Item item, Service service, Invoice invoice) {
         this.idServiceLine = idServiceLine;
         this.serviceLineNumber = serviceLineNumber;
         this.qty = qty;
@@ -56,14 +65,15 @@ public class ServiceLine {
     }
 
 
+
     //getters and setters
 
 
-    public int getIdServiceLine() {
+    public Long getIdServiceLine() {
         return idServiceLine;
     }
 
-    public void setIdServiceLine(int idServiceLine) {
+    public void setIdServiceLine(Long idServiceLine) {
         this.idServiceLine = idServiceLine;
     }
 
@@ -130,4 +140,6 @@ public class ServiceLine {
     public void setInvoice(Invoice invoice) {
         this.invoice = invoice;
     }
+
+
 }

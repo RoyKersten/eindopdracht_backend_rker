@@ -8,6 +8,7 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("inspection")
+
 public class Inspection extends Service {
 
     //attributen
@@ -17,7 +18,7 @@ public class Inspection extends Service {
     //constructor
     public Inspection () {}
 
-    public Inspection(int idService, Date serviceDate, String serviceStatus, Customer customer, List<ServiceLine> serviceLine, String issuesFoundInspection, Car car) {
+    public Inspection(Long idService, Date serviceDate, String serviceStatus, Customer customer, List<ServiceLine> serviceLine, String issuesFoundInspection, Car car) {
         super(idService, serviceDate, serviceStatus, customer, serviceLine, car);
         this.issuesFoundInspection = issuesFoundInspection;
     }

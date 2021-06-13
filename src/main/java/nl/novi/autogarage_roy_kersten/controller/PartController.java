@@ -1,13 +1,12 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Part;
+import nl.novi.autogarage_roy_kersten.service.ItemService;
 import nl.novi.autogarage_roy_kersten.service.PartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 
 /**
  * The PartController class ensures that HTTP Requests en Responses are handled and processed further to the PartService class.
@@ -57,52 +56,23 @@ import java.net.URI;
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/items/parts")
-public class PartController {
+public class PartController extends ItemController {
+
     private PartService partService;
 
     @Autowired
-    public PartController(PartService partService) {
+    public PartController(@Qualifier("partService") ItemService itemService, PartService partService) {
+        super(itemService);
         this.partService = partService;
     }
 
-    //Methods
-
-    //Create a new Part
-    @PostMapping(value = "")
-    public ResponseEntity<Object> addPart(@RequestBody Part part) {
-        long newId = partService.addPart(part);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idItem}")
-                .buildAndExpand(newId).toUri();
-        return ResponseEntity.created(location).body(location);
-    }
-
-    //Get all Parts
-    @GetMapping(value = "")
-    public ResponseEntity<Object> getAllParts() {
-        return ResponseEntity.ok(partService.getAllParts());
-    }
-
-
-    //Get Part by idItem
-    @GetMapping("/{idItem}")
-    public ResponseEntity<Object> getPartById(@PathVariable("idItem") long idItem) {
-        Part part = partService.getPartById(idItem);
-        return ResponseEntity.ok(part);
-    }
-
-
-    //Delete Part by idItem
-    @DeleteMapping("/{idItem}")
-    public ResponseEntity<Object> deletePartById(@PathVariable("idItem") long idItem) {
-        partService.deletePartById(idItem);
-        return ResponseEntity.ok("item successfully deleted");
-    }
 
     //Update Part by idItem
     @PutMapping("/{idItem}")
     public ResponseEntity<Object> updatePartById(@PathVariable("idItem") long idItem, @RequestBody Part updatePart) {
         partService.updatePartById(idItem, updatePart);
-        return ResponseEntity.ok("update item successfully");
+        return ResponseEntity.ok("update Part successfully");
     }
+
 
 }

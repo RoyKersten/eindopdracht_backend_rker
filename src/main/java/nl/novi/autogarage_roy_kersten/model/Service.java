@@ -1,20 +1,33 @@
 package nl.novi.autogarage_roy_kersten.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)                   // Set Strategy SINGLE_TABLE => Create one table for all subclasses with a subclass type column to differentiate between subclasses
-@DiscriminatorColumn(name = "service_type")
-@Table(name = "service")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)                   //Set Strategy SINGLE_TABLE => Create one table for all subclasses with a subclass type column to differentiate between subclasses
+@DiscriminatorColumn(name = "service_type")                             //Table generation
+@Table(name = "service")                                                //Table generation
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Inspection.class, name = "inspection"),
+
+        @JsonSubTypes.Type(value = Repair.class, name = "repair") }
+)
+
 public abstract class Service {
 
     //attributen
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idService;
+    private Long idService;
 
     @Column (name = "service_date")
     @Temporal(TemporalType.DATE)
@@ -24,21 +37,21 @@ public abstract class Service {
     private String serviceStatus;           //zou ook uit een list geselecteerd kunnen worden, dan is het altijd een vaste omschrijving ??? !!!
 
     @OneToMany (mappedBy = "service")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<ServiceLine> serviceLine;
 
     @ManyToOne
+    @Cascade(org.hibernate.annotations.CascadeType.MERGE)    // 	In this cascade operation, if the parent entity is merged then all its related entity will also be merged.
     private Customer customer;
 
     @ManyToOne
+    @Cascade(org.hibernate.annotations.CascadeType.MERGE)    // 	In this cascade operation, if the parent entity is merged then all its related entity will also be merged.
     private Car car;
 
-    @OneToOne
-    private Invoice invoice;
-
-    //constructor
+     //constructor
     public Service() {}
 
-    public Service(int idService, Date serviceDate, String serviceStatus, Customer customer, List<ServiceLine> serviceLine,Car car) {
+    public Service(Long idService, Date serviceDate, String serviceStatus, Customer customer, List<ServiceLine> serviceLine,Car car) {
         this.idService = idService;
         this.serviceDate = serviceDate;
         this.serviceStatus = serviceStatus;
@@ -50,11 +63,11 @@ public abstract class Service {
 
     //getters and setters
 
-    public int getIdService() {
+    public Long getIdService() {
         return idService;
     }
 
-    public void setIdService(int idService) {
+    public void setIdService(Long idService) {
         this.idService = idService;
     }
 
@@ -97,4 +110,6 @@ public abstract class Service {
     public void setCar(Car car) {
         this.car = car;
     }
+
+
 }

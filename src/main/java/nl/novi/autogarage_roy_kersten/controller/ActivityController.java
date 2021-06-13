@@ -2,12 +2,11 @@ package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Activity;
 import nl.novi.autogarage_roy_kersten.service.ActivityService;
+import nl.novi.autogarage_roy_kersten.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 /**
  * The ActivityController class ensures that HTTP Requests en Responses are handled and processed further to the ActivityService class.
  * <p>
@@ -53,46 +52,17 @@ import java.net.URI;
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/items/activities")
-public class ActivityController {
+public class ActivityController extends ItemController {
+
     private ActivityService activityService;
 
     @Autowired
-    public ActivityController(ActivityService activityService) {
+    public ActivityController(@Qualifier("activityService") ItemService itemService, ActivityService activityService) {
+        super(itemService);
         this.activityService = activityService;
     }
 
     //Methods
-
-    //Create a new Activity
-    @PostMapping(value = "")
-    public ResponseEntity<Object> addActivity(@RequestBody Activity activity) {
-        long newId = activityService.addActivity(activity);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idItem}")
-                .buildAndExpand(newId).toUri();
-        return ResponseEntity.created(location).body(location);
-    }
-
-    //Get all Activities
-    @GetMapping(value = "")
-    public ResponseEntity<Object> getAllActivities() {
-        return ResponseEntity.ok(activityService.getAllActivities());
-    }
-
-
-    //Get Activity by idItem
-    @GetMapping("/{idItem}")
-    public ResponseEntity<Object> getActivityById(@PathVariable("idItem") long idItem) {
-        Activity activity = activityService.getActivityById(idItem);
-        return ResponseEntity.ok(activity);
-    }
-
-
-    //Delete Activity by idItem
-    @DeleteMapping("/{idItem}")
-    public ResponseEntity<Object> deleteActivityById(@PathVariable("idItem") long idItem) {
-        activityService.deleteActivityById(idItem);
-        return ResponseEntity.ok("item successfully deleted");
-    }
 
     //Update Activity by idItem
     @PutMapping("/{idItem}")

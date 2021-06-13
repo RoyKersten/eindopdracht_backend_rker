@@ -15,37 +15,27 @@ public class RepairInvoice extends Invoice {
 
     //attributes
     @OneToOne
-    private Service service;
+    private Repair repair;
 
 
-//constructor
-    public RepairInvoice() {}
+    //constructor
+    public RepairInvoice() {
+    }
 
-    public RepairInvoice(int idInvoice, String invoiceStatus, Customer customer, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, Service service) {
+    public RepairInvoice(Long idInvoice, String invoiceStatus, Customer customer, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, Repair repair) {
         super(idInvoice, invoiceStatus, customer, lineTotal, invoiceSubtotal, vatRate, vatAmount, invoiceTotal);
-        this.service = service;
+        this.repair = repair;
 
     }
 
-//getters and setters
+    //getters and setters
 
-    public Service getRepair() {
-        return service;
+    public Repair getRepair() {
+        return repair;
     }
 
-    public void setRepair(Service repair) {
-        this.service = service;
+    public void setRepair(Repair repair) {
+        this.repair = repair;
     }
-
-
-    // @Override
-   // public String toString() {
-   //    return getInspection().getIdService() + " " + getInspection().getServiceDate() + " " + getInspection().getServiceStatus() + " " + getInspection().getCustomer() + " " + getInspection().getServiceLine().getPrice() + " " + getInspection().getIssuesFoundInspection();  }   // uitbreiden met andere parameters phoneNumber en email}
-
-     /** informatie uit ServiceLine kan rechtstreeks worden opgehaald uit ServiceLine of via Inspection
-      *  getInspection().getServiceLine().getPrice()                => indien inspectionInvoice communiceerd via Inspection met ServiceLine
-      *  getServiceLine().getQty()                                  => indien inspectionInvoice rechstreeks communiceerd met serviceLine
-      **/
-
 
 }

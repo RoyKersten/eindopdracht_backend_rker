@@ -1,5 +1,7 @@
 package nl.novi.autogarage_roy_kersten.model;
 
+import com.fasterxml.jackson.annotation.*;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,6 +13,15 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)                   // Set Strategy SINGLE_TABLE => Create one table for all subclasses with a subclass type column to differentiate between subclasses
 @DiscriminatorColumn(name = "item_type")
 @Table(name = "item")
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Part.class, name = "part"),
+        @JsonSubTypes.Type(value = Activity.class, name = "activity"),
+})
+
+
 public abstract class Item {
 
     //Attributes
@@ -31,6 +42,7 @@ public abstract class Item {
     private String itemCategory;
 
     @OneToMany (mappedBy = "item")
+    //@JsonManagedReference
     private List<ServiceLine> serviceLine;
 
     //@JsonIgnoreProperties("item")
@@ -86,6 +98,14 @@ public abstract class Item {
 
     public void setItemCategory(String itemCategory) {
         this.itemCategory = itemCategory;
+    }
+
+    public List<ServiceLine> getServiceLine() {
+        return serviceLine;
+    }
+
+    public void setServiceLine(List<ServiceLine> serviceLine) {
+        this.serviceLine = serviceLine;
     }
 
     //Methods

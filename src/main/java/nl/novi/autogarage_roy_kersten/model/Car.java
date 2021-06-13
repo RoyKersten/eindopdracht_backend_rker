@@ -1,5 +1,7 @@
 package nl.novi.autogarage_roy_kersten.model;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -30,11 +32,10 @@ public class Car {
     @Column(name = "license_plate_number")
     private String licensePlateNumber;
 
-    @OneToMany
+    @OneToMany (mappedBy = "car")
     private List<Service> service;
 
     @ManyToOne
-    //@Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Customer customer;
 
     //@JsonIgnoreProperties("car")
@@ -101,7 +102,16 @@ public class Car {
         this.customer = customer;
     }
 
-//Methods
+    public List<Service> getService() {
+        return service;
+    }
+
+    public void setService(List<Service> service) {
+        this.service = service;
+    }
+
+
+    //Methods
 
 
 }
