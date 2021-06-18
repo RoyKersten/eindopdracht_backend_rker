@@ -1,7 +1,7 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Service;
-import nl.novi.autogarage_roy_kersten.service.ServiceService;
+import nl.novi.autogarage_roy_kersten.service.ServiceServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -43,11 +43,11 @@ import java.net.URI;
 public abstract class ServiceController {
 
 
-    private ServiceService serviceService;
+    private ServiceServiceImpl serviceServiceImpl;
 
 
-    public ServiceController(ServiceService serviceService) {
-        this.serviceService = serviceService;
+    public ServiceController(ServiceServiceImpl serviceServiceImpl) {
+        this.serviceServiceImpl = serviceServiceImpl;
     }
 
     //Methods
@@ -55,23 +55,17 @@ public abstract class ServiceController {
     //Create a new Service
     @PostMapping(value = "")
     public ResponseEntity<Object> addService(@RequestBody Service service) {
-        long newId = serviceService.addService(service);
+        long newId = serviceServiceImpl.addService(service);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idService}")
                 .buildAndExpand(newId).toUri();
         return ResponseEntity.created(location).body(location);
-    }
-
-    //Get all Service
-    @GetMapping(value = "")
-    public ResponseEntity<Object> getAllServices() {
-        return ResponseEntity.ok(serviceService.getAllServices());
     }
 
 
     //Get Service by idService
     @GetMapping("/{idService}")
     public ResponseEntity<Object> getServiceById(@PathVariable("idService") long idService) {
-        Service service = serviceService.getServiceById(idService);
+        Service service = serviceServiceImpl.getServiceById(idService);
         return ResponseEntity.ok(service);
     }
 
@@ -79,7 +73,7 @@ public abstract class ServiceController {
     //Delete Service by idService
     @DeleteMapping("/{idService}")
     public ResponseEntity<Object> deleteActivityById(@PathVariable("idService") long idService) {
-        serviceService.deleteServiceById(idService);
+        serviceServiceImpl.deleteServiceById(idService);
         return ResponseEntity.ok("service successfully deleted");
     }
 

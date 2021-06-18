@@ -1,8 +1,8 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Part;
-import nl.novi.autogarage_roy_kersten.service.ItemService;
-import nl.novi.autogarage_roy_kersten.service.PartService;
+import nl.novi.autogarage_roy_kersten.service.ItemServiceImpl;
+import nl.novi.autogarage_roy_kersten.service.PartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -56,18 +56,26 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/items/parts")
+
 public class PartController extends ItemController {
 
-    private PartService partService;
+    private PartServiceImpl partService;
 
     @Autowired
-    public PartController(@Qualifier("partService") ItemService itemService, PartService partService) {
-        super(itemService);
+    public PartController(@Qualifier("partServiceImpl") ItemServiceImpl itemServiceImpl, PartServiceImpl partService) {
+        super(itemServiceImpl);
         this.partService = partService;
     }
 
+    //Methods
 
-    //Update Part by idItem
+    //Get all Parts, need to be defined in subclass Part, path: "/items/parts" should only show parts not activities
+    @GetMapping(value = "")
+    public ResponseEntity<Object> getAllParts() {
+        return ResponseEntity.ok(partService.getAllParts());
+    }
+
+    //Update Part by idItem =>
     @PutMapping("/{idItem}")
     public ResponseEntity<Object> updatePartById(@PathVariable("idItem") long idItem, @RequestBody Part updatePart) {
         partService.updatePartById(idItem, updatePart);

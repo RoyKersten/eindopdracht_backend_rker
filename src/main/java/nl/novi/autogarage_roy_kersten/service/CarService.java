@@ -9,7 +9,6 @@ import java.util.List;
  * The CarService Interface defines the methods which should be implemented by the CarServiceImpl class
  * */
 
-@Service
 public interface CarService {
 
     //Methods

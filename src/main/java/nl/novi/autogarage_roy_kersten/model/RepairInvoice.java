@@ -1,5 +1,6 @@
 package nl.novi.autogarage_roy_kersten.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import nl.novi.autogarage_roy_kersten.model.Customer;
 import nl.novi.autogarage_roy_kersten.model.Invoice;
 import nl.novi.autogarage_roy_kersten.model.Repair;
@@ -15,6 +16,7 @@ public class RepairInvoice extends Invoice {
 
     //attributes
     @OneToOne
+    @JsonIgnore
     private Repair repair;
 
 

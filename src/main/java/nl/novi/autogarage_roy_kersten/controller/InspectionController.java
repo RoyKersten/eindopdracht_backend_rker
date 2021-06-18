@@ -1,9 +1,8 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Inspection;
-import nl.novi.autogarage_roy_kersten.model.Service;
-import nl.novi.autogarage_roy_kersten.service.InspectionService;
-import nl.novi.autogarage_roy_kersten.service.ServiceService;
+import nl.novi.autogarage_roy_kersten.service.InspectionServiceImpl;
+import nl.novi.autogarage_roy_kersten.service.ServiceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -36,13 +35,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/services/inspections")
 public class InspectionController extends ServiceController {
 
-    private InspectionService inspectionService;
+    private InspectionServiceImpl inspectionService;
 
 
     @Autowired
-    public InspectionController(@Qualifier("inspectionService") ServiceService serviceService, InspectionService inspectionService) {
-        super(serviceService);
+    public InspectionController(@Qualifier("inspectionServiceImpl") ServiceServiceImpl serviceServiceImpl, InspectionServiceImpl inspectionService) {
+        super(serviceServiceImpl);
         this.inspectionService = inspectionService;
+    }
+
+    //Methods
+    //Get all Inspections, need to be defined in subclass Inspection, path: "/services/inspections" should only show inspections, not repairs
+    @GetMapping(value = "")
+    public ResponseEntity<Object> getAllInspections() {
+        return ResponseEntity.ok(inspectionService.getAllInspections());
     }
 
 

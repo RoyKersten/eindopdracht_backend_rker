@@ -1,6 +1,9 @@
 package nl.novi.autogarage_roy_kersten.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,6 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "customer")
+
 public class Customer {
 
 
@@ -34,15 +38,16 @@ public class Customer {
     private String email;
 
     @OneToMany (mappedBy = "customer")
+    @JsonIgnore
     private List<Invoice> invoice;
 
     @OneToMany (mappedBy = "customer")
+    @JsonIgnore
     private List<Car> car;
 
     @OneToMany (mappedBy = "customer")
+    @JsonIgnore
     private List<Service> service;
-
-    @JsonIgnoreProperties("customer")
 
 
     //Constructors

@@ -21,7 +21,6 @@ import java.util.List;
         @JsonSubTypes.Type(value = Activity.class, name = "activity"),
 })
 
-
 public abstract class Item {
 
     //Attributes
@@ -42,10 +41,9 @@ public abstract class Item {
     private String itemCategory;
 
     @OneToMany (mappedBy = "item")
-    //@JsonManagedReference
+    @JsonIgnore                                     // Ignore ServiceLine connections when item information is called
     private List<ServiceLine> serviceLine;
 
-    //@JsonIgnoreProperties("item")
 
     //Constructors
     public Item () {}

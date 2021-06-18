@@ -1,8 +1,6 @@
 package nl.novi.autogarage_roy_kersten.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -38,6 +36,7 @@ public abstract class Service {
 
     @OneToMany (mappedBy = "service")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @JsonIgnore
     private List<ServiceLine> serviceLine;
 
     @ManyToOne

@@ -1,5 +1,9 @@
 package nl.novi.autogarage_roy_kersten.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -13,6 +17,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "car")
+
+//@JsonIgnoreProperties ({"service", "customer"})           /JSON ignore at class level
 public class Car {
 
     // Attributes
@@ -33,12 +39,11 @@ public class Car {
     private String licensePlateNumber;
 
     @OneToMany (mappedBy = "car")
+    @JsonIgnore                         //Json ignore at field level
     private List<Service> service;
 
     @ManyToOne
     private Customer customer;
-
-    //@JsonIgnoreProperties("car")
 
     // Constructors
     public Car() {}

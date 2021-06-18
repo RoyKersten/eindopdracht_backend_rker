@@ -24,10 +24,10 @@ VALUES
 ('inspection', '2021-06-08' , 'uitvoeren' ,'remmen voor vervangen, 4 nieuwe banden, olie verversen',null,1,1),
 ('repair', '2021-06-08' , 'uitvoeren' ,null, 'uitlaat vervangen',2,1);
 
-INSERT INTO invoice (invoice_type, invoice_status, line_total, invoice_subtotal, vat_rate, vat_amount,invoice_total, customer_id_customer, service_id_service)
+INSERT INTO invoice (invoice_type, invoice_status, line_total, invoice_subtotal, vat_rate, vat_amount,invoice_total, customer_id_customer, inspection_id_service, repair_id_service)
 VALUES
-('inspection_invoice', 'betaald' , 275.00 ,275.00, 0.21, 55, 330.00,'1', '1'),
-('inspection_invoice', 'betaald' , 275.00 ,275.00, 0.21, 55, 330.00,'1', '1');
+('inspection_invoice', 'betaald' , 275.00 ,275.00, 0.21, 55, 330.00,'1', '1',null),
+('repair_invoice', 'betaald' , 275.00 ,275.00, 0.21, 55, 330.00,'1',null, '2');
 
 INSERT INTO service_line (service_line_number, item_id_item, item_name,qty, price, line_total,service_id_service, invoice_id_invoice)
 VALUES

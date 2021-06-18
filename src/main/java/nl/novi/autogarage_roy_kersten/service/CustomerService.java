@@ -8,7 +8,6 @@ import java.util.List;
  * The CustomerService Interface defines the methods which should be implemented by the CustomerServiceImpl class
 * */
 
-@Service
 public interface CustomerService {
 
     //Methods

@@ -1,5 +1,7 @@
 package nl.novi.autogarage_roy_kersten.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -10,6 +12,7 @@ public class InspectionInvoice extends Invoice {
 
     //attributes
     @OneToOne
+    @JsonIgnore
     private Inspection inspection;
 
 
