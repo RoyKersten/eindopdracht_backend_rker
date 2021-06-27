@@ -1,11 +1,5 @@
 package nl.novi.autogarage_roy_kersten.model;
 
-import com.fasterxml.jackson.annotation.*;
-import nl.novi.autogarage_roy_kersten.model.Invoice;
-import nl.novi.autogarage_roy_kersten.model.Item;
-import nl.novi.autogarage_roy_kersten.model.Service;
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
 
 @Entity
@@ -19,7 +13,7 @@ public class ServiceLine {
     private Long idServiceLine;
 
     @Column(name = "service_line_number")
-    private int serviceLineNumber;
+    private Long serviceLineNumber;
 
     @Column(name = "qty")
     private int qty;
@@ -30,8 +24,18 @@ public class ServiceLine {
     @Column (name = "price")
     private float price;
 
+    @Column (name = "line_subtotal")
+    private float lineSubTotal;
+
+    @Column (name = "vat_rate")
+    private float vatRate;
+
+    @Column (name = "vat_amount")
+    private float vatAmount;
+
     @Column (name = "line_total")
     private float lineTotal;
+
 
     @ManyToOne
     private Item item;
@@ -45,19 +49,20 @@ public class ServiceLine {
     //constructor
     public ServiceLine () {}
 
-
-    public ServiceLine(Long idServiceLine, int serviceLineNumber, int qty, String itemName, float price, float lineTotal, Item item, Service service, Invoice invoice) {
+    public ServiceLine(Long idServiceLine, Long serviceLineNumber, int qty, String itemName, float price, float lineSubTotal, float vatRate, float vatAmount, float lineTotal, Item item, Service service, Invoice invoice) {
         this.idServiceLine = idServiceLine;
         this.serviceLineNumber = serviceLineNumber;
         this.qty = qty;
         this.itemName = itemName;
         this.price = price;
+        this.lineSubTotal = lineSubTotal;
+        this.vatRate = vatRate;
+        this.vatAmount = vatAmount;
         this.lineTotal = lineTotal;
         this.item = item;
         this.service = service;
         this.invoice = invoice;
     }
-
 
 
     //getters and setters
@@ -71,11 +76,11 @@ public class ServiceLine {
         this.idServiceLine = idServiceLine;
     }
 
-    public int getServiceLineNumber() {
+    public Long getServiceLineNumber() {
         return serviceLineNumber;
     }
 
-    public void setServiceLineNumber(int serviceLineNumber) {
+    public void setServiceLineNumber(Long serviceLineNumber) {
         this.serviceLineNumber = serviceLineNumber;
     }
 
@@ -101,6 +106,30 @@ public class ServiceLine {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public float getLineSubTotal() {
+        return lineSubTotal;
+    }
+
+    public void setLineSubTotal(float lineSubTotal) {
+        this.lineSubTotal = lineSubTotal;
+    }
+
+    public float getVatRate() {
+        return vatRate;
+    }
+
+    public void setVatRate(float vatRate) {
+        this.vatRate = vatRate;
+    }
+
+    public float getVatAmount() {
+        return vatAmount;
+    }
+
+    public void setVatAmount(float vatAmount) {
+        this.vatAmount = vatAmount;
     }
 
     public float getLineTotal() {
@@ -134,6 +163,4 @@ public class ServiceLine {
     public void setInvoice(Invoice invoice) {
         this.invoice = invoice;
     }
-
-
 }

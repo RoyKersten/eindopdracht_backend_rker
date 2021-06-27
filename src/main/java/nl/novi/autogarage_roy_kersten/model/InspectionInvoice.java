@@ -4,37 +4,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue("inspection_invoice")
 public class InspectionInvoice extends Invoice {
-
-    //attributes
-    @OneToOne
-    @JsonIgnore
-    private Inspection inspection;
 
 
     //constructor
     public InspectionInvoice() {
     }
 
-    public InspectionInvoice(Long idInvoice, String invoiceStatus, Customer customer, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, Inspection inspection) {
-        super(idInvoice, invoiceStatus, customer, lineTotal, invoiceSubtotal, vatRate, vatAmount, invoiceTotal);
-        this.inspection = inspection;
-
+    public InspectionInvoice(Long idInvoice, String invoiceStatus, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, List<ServiceLine> serviceLine, Customer customer, Service service) {
+        super(idInvoice, invoiceStatus, invoiceSubtotal, vatRate, vatAmount, invoiceTotal, serviceLine, customer, service);
     }
 
-    //getters and setters
-
-    public Inspection getInspection() {
-        return inspection;
-    }
-
-    public void setInspection(Inspection inspection) {
-        this.inspection = inspection;
-    }
-
+    //Getters and Setters
 
 }

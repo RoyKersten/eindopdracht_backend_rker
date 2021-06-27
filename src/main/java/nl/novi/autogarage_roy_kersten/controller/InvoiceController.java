@@ -50,4 +50,13 @@ public abstract class InvoiceController {
         return ResponseEntity.ok("update Invoice successfully");
     }
 
+
+    //Update InvoiceStatus by idInvoice
+    @PutMapping("/status/{idInvoice}")
+    public ResponseEntity<Object> updateInvoiceStatusById(@PathVariable("idInvoice") long idInvoice, @RequestBody Invoice updateInvoice) {
+        invoiceServiceImpl.updateInvoiceStatusById(idInvoice, updateInvoice);
+        return ResponseEntity.ok("update InvoiceStatus successfully");
+    }
+
+
 }

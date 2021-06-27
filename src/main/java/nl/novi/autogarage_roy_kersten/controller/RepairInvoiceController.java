@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/invoices/repairs")
-public class RepairInvoiceController extends InvoiceController{
+public class RepairInvoiceController extends InvoiceController {
 
     private RepairInvoiceServiceImpl repairInvoiceService;
 
@@ -22,6 +22,7 @@ public class RepairInvoiceController extends InvoiceController{
         super(invoiceServiceImpl);
         this.repairInvoiceService = repairInvoiceService;
     }
+
 
     //Methods
     //Get all repair invoices, need to be defined in subclass RepairInvoice, path: "/invoices/repairs" should only show repair invoices, not inspection invoices

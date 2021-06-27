@@ -1,8 +1,7 @@
 package nl.novi.autogarage_roy_kersten.service;
 
-import nl.novi.autogarage_roy_kersten.model.InspectionInvoice;
-import nl.novi.autogarage_roy_kersten.repository.InspectionInvoiceRepository;
-import nl.novi.autogarage_roy_kersten.repository.InvoiceRepository;
+import nl.novi.autogarage_roy_kersten.model.*;
+import nl.novi.autogarage_roy_kersten.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +12,21 @@ public class InspectionInvoiceServiceImpl extends InvoiceServiceImpl implements 
 
     private InspectionInvoiceRepository inspectionInvoiceRepository;
 
+
     @Autowired
-    public InspectionInvoiceServiceImpl(InvoiceRepository invoiceRepository, InspectionInvoiceRepository inspectionInvoiceRepository) {
-        super(invoiceRepository);
+    public InspectionInvoiceServiceImpl(InvoiceRepository invoiceRepository, ServiceRepository serviceRepository, ServiceLineRepository serviceLineRepository, CustomerRepository customerRepository, InspectionInvoiceRepository inspectionInvoiceRepository) {
+        super(invoiceRepository, serviceRepository, serviceLineRepository, customerRepository);
         this.inspectionInvoiceRepository = inspectionInvoiceRepository;
     }
 
+
     //Get all Inspection Invoices
+    @Override
     public List<InspectionInvoice> getAllInspectionInvoices() {
         return inspectionInvoiceRepository.findAll();
     }
 
+
 }
+
+

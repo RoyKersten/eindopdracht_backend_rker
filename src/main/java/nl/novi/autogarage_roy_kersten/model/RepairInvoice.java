@@ -9,35 +9,28 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue("repair_invoice")
 public class RepairInvoice extends Invoice {
 
     //attributes
-    @OneToOne
-    @JsonIgnore
-    private Repair repair;
+//    @OneToOne
+//    //@JsonIgnore
+//    private Repair repair;
 
 
     //constructor
     public RepairInvoice() {
     }
 
-    public RepairInvoice(Long idInvoice, String invoiceStatus, Customer customer, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, Repair repair) {
-        super(idInvoice, invoiceStatus, customer, lineTotal, invoiceSubtotal, vatRate, vatAmount, invoiceTotal);
-        this.repair = repair;
-
+    public RepairInvoice(Long idInvoice, String invoiceStatus, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, List<ServiceLine> serviceLine, Customer customer, Service service) {
+        super(idInvoice, invoiceStatus, invoiceSubtotal, vatRate, vatAmount, invoiceTotal, serviceLine, customer, service);
     }
 
-    //getters and setters
+    //Getters and setters
 
-    public Repair getRepair() {
-        return repair;
-    }
 
-    public void setRepair(Repair repair) {
-        this.repair = repair;
-    }
 
 }

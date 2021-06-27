@@ -1,13 +1,17 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
 
+import nl.novi.autogarage_roy_kersten.exception.BadRequestException;
 import nl.novi.autogarage_roy_kersten.model.Car;
 import nl.novi.autogarage_roy_kersten.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 
 /**
@@ -109,6 +113,25 @@ public class CarController {
         carService.updateCarById(idCar, updateCar);
         return ResponseEntity.ok("update car successfully");
     }
+
+    //Store CarPapers into the database by idCar
+    @PostMapping("/{idCar}/carpaper")
+    public void uploadCarPapers(@PathVariable("idCar") Long idCarPaper, @RequestParam("file") MultipartFile file) throws IOException {
+        if (file.getContentType() == null || !file.getContentType().equals("application/pdf")) {
+            throw new BadRequestException();
+        }
+        carService.uploadCarPaper(idCarPaper, file);
+    }
+
+    //Get CarPapers from the databse by idCar
+    @GetMapping("/{idCar}/carpaper")
+    public ResponseEntity<byte[]> getCarPapers(@PathVariable("idCar") Long idCarPaper) {
+        var licenseBytes = carService.getCarPaper(idCarPaper);
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"carpaper.pdf\"")
+                .body(licenseBytes);
+    }
+
 
 
 }

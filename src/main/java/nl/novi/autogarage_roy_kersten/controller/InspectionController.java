@@ -52,7 +52,7 @@ public class InspectionController extends ServiceController {
     }
 
 
-//    Update inspection by idService (issuesFoundInspection)
+//    Update inspection by idService (issuesFoundInspection), specific for Inspection, needs to be defined in subclass
     @PutMapping("/{idService}")
     public ResponseEntity<Object> updateInspectionById(@PathVariable("idService") long idService, @RequestBody Inspection updateService) {
         inspectionService.updateInspectionById(idService, updateService);

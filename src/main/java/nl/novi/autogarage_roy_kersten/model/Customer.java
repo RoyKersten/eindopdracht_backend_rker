@@ -43,6 +43,10 @@ public class Customer {
 
     @OneToMany (mappedBy = "customer")
     @JsonIgnore
+    private List<InspectionInvoice> inspectionInvoice;
+
+    @OneToMany (mappedBy = "customer")
+    @JsonIgnore
     private List<Car> car;
 
     @OneToMany (mappedBy = "customer")

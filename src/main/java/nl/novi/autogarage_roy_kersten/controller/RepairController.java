@@ -51,7 +51,8 @@ public class RepairController extends ServiceController {
         return ResponseEntity.ok(repairService.getAllRepairs());
     }
 
-    //Update Service by idService
+
+    //Update Service by idService (issuesToRepair), specific for Repair needs to be defined in subclass
     @PutMapping("/{idService}")
     public ResponseEntity<Object> updateRepairById(@PathVariable("idService") long idService, @RequestBody Repair updateService) {
         repairService.updateRepairById(idService, updateService);

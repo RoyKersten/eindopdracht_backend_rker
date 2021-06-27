@@ -30,9 +30,6 @@ public abstract class Invoice {
     @Column(name = "invoice_status")
     private String invoiceStatus;
 
-    @Column(name = "line_total")
-    private float lineTotal;
-
     @Column(name = "invoice_subtotal")
     private float invoiceSubtotal;
 
@@ -52,26 +49,26 @@ public abstract class Invoice {
     @ManyToOne
     private Customer customer;
 
+    @OneToOne
+    private Service service;
+
     //Constructors
     public Invoice() {
     }
 
-    public Invoice(Long idInvoice, String invoiceStatus, Customer customer, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal) {
+    public Invoice(Long idInvoice, String invoiceStatus, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, List<ServiceLine> serviceLine, Customer customer, Service service) {
         this.idInvoice = idInvoice;
         this.invoiceStatus = invoiceStatus;
-        this.customer = customer;
-        this.lineTotal = lineTotal;
         this.invoiceSubtotal = invoiceSubtotal;
         this.vatRate = vatRate;
         this.vatAmount = vatAmount;
         this.invoiceTotal = invoiceTotal;
-
-
+        this.serviceLine = serviceLine;
+        this.customer = customer;
+        this.service = service;
     }
 
-
-    //Getters and Setters
-
+//Getters and Setters
 
     public Long getIdInvoice() {
         return idInvoice;
@@ -87,22 +84,6 @@ public abstract class Invoice {
 
     public void setInvoiceStatus(String invoiceStatus) {
         this.invoiceStatus = invoiceStatus;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public float getLineTotal() {
-        return lineTotal;
-    }
-
-    public void setLineTotal(float lineTotal) {
-        this.lineTotal = lineTotal;
     }
 
     public float getInvoiceSubtotal() {
@@ -137,6 +118,29 @@ public abstract class Invoice {
         this.invoiceTotal = invoiceTotal;
     }
 
+    public List<ServiceLine> getServiceLine() {
+        return serviceLine;
+    }
+
+    public void setServiceLine(List<ServiceLine> serviceLine) {
+        this.serviceLine = serviceLine;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Service getService() {
+        return service;
+    }
+
+    public void setService(Service service) {
+        this.service = service;
+    }
 
     //Methods
 

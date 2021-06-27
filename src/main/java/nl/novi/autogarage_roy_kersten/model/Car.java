@@ -1,10 +1,6 @@
 package nl.novi.autogarage_roy_kersten.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
@@ -45,16 +41,24 @@ public class Car {
     @ManyToOne
     private Customer customer;
 
+//    @OneToOne (mappedBy = "car")
+//    private CarPaper carPaper;
+
+    @Lob
+    byte[] carPaper;
+
     // Constructors
     public Car() {}
 
-    public Car(Long idCar, String brand, String model, String yearOfConstruction, String licensePlateNumber, Customer customer) {
+    public Car(Long idCar, String brand, String model, String yearOfConstruction, String licensePlateNumber, List<Service> service, Customer customer, byte[] carPaper) {
         this.idCar = idCar;
         this.brand = brand;
         this.model = model;
         this.yearOfConstruction = yearOfConstruction;
         this.licensePlateNumber = licensePlateNumber;
+        this.service = service;
         this.customer = customer;
+        this.carPaper = carPaper;
     }
 
     // Getters and Setters
@@ -115,8 +119,15 @@ public class Car {
         this.service = service;
     }
 
+    public byte[] getCarPaper() {
+        return carPaper;
+    }
 
-    //Methods
+    public void setCarPaper(byte[] carPaper) {
+        this.carPaper = carPaper;
+    }
+
+//Methods
 
 
 }

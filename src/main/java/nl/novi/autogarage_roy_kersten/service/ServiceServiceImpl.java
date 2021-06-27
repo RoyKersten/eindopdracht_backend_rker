@@ -2,6 +2,8 @@ package nl.novi.autogarage_roy_kersten.service;
 
 import nl.novi.autogarage_roy_kersten.exception.BadRequestException;
 import nl.novi.autogarage_roy_kersten.exception.RecordNotFoundException;
+import nl.novi.autogarage_roy_kersten.model.Invoice;
+import nl.novi.autogarage_roy_kersten.model.Repair;
 import nl.novi.autogarage_roy_kersten.model.Service;
 import nl.novi.autogarage_roy_kersten.repository.ServiceRepository;
 
@@ -41,5 +43,21 @@ public abstract class ServiceServiceImpl implements ServiceService {
             throw new BadRequestException();
         }
         serviceRepository.deleteById(idService);
+    }
+
+
+    public void updateServiceStatusById(long idService, Service updateService) {
+
+        if (!serviceRepository.existsById(idService)) {
+            throw new BadRequestException();
+        }
+
+        Service storedService = serviceRepository.findById(idService);
+        if (!(updateService.getServiceStatus().equals("uitvoeren") || updateService.getServiceStatus().equals("voltooid"))) {     //Service can only have status "uitvoeren" or "voltooid"
+            throw new BadRequestException();
+        }
+
+        storedService.setServiceStatus(updateService.getServiceStatus());
+        serviceRepository.save(storedService);
     }
 }

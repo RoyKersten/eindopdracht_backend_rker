@@ -6,7 +6,9 @@ import nl.novi.autogarage_roy_kersten.model.Car;
 import nl.novi.autogarage_roy_kersten.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -81,5 +83,29 @@ public class CarServiceImpl implements CarService{
         storedCar.setCustomer(updateCar.getCustomer());                                         //TO BE CHECKED !!!!!!!!
         carRepository.save(updateCar);
     }
+
+
+    @Override
+    public void uploadCarPaper(Long idCarPaper, MultipartFile file) throws IOException {
+        var optionalCarPaper = carRepository.findById(idCarPaper);
+        if (optionalCarPaper.isPresent()) {
+            var carPaper = optionalCarPaper.get();
+            carPaper.setCarPaper(file.getBytes());
+            carRepository.save(carPaper);
+        } else {
+            throw new RecordNotFoundException();
+        }
+    }
+
+    @Override
+    public byte[] getCarPaper(Long idCarPaper) {
+        var optionalCarPaper = carRepository.findById(idCarPaper);
+        if (optionalCarPaper.isPresent()) {
+            return optionalCarPaper.get().getCarPaper();
+        } else {
+            throw new RecordNotFoundException();
+        }
+    }
+
 
 }

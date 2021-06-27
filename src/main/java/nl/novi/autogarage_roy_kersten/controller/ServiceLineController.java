@@ -91,4 +91,15 @@ public class ServiceLineController {
     }
 
 
+    //calculate lineTotal ServiceLine
+//    @PostMapping(value = "")
+//    public ResponseEntity<Object> calculateLineTotal(@RequestBody ServiceLine serviceLine) {
+//        long newId = serviceLineService.addServiceLine(serviceLine);
+//        serviceLineService.calculateLineTotal(serviceLine);
+//        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idServiceLine}")
+//                .buildAndExpand(newId).toUri();
+//        return ResponseEntity.created(location).body(location);
+//    }
+
+
 }

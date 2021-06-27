@@ -1,8 +1,7 @@
 package nl.novi.autogarage_roy_kersten.service;
 
-import nl.novi.autogarage_roy_kersten.model.RepairInvoice;
-import nl.novi.autogarage_roy_kersten.repository.InvoiceRepository;
-import nl.novi.autogarage_roy_kersten.repository.RepairInvoiceRepository;
+import nl.novi.autogarage_roy_kersten.model.*;
+import nl.novi.autogarage_roy_kersten.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +13,12 @@ public class RepairInvoiceServiceImpl extends InvoiceServiceImpl implements Repa
 
     private RepairInvoiceRepository repairInvoiceRepository;
 
-    @Autowired
-    public RepairInvoiceServiceImpl(InvoiceRepository invoiceRepository, RepairInvoiceRepository repairInvoiceRepository) {
-        super(invoiceRepository);
+
+    public RepairInvoiceServiceImpl(InvoiceRepository invoiceRepository, ServiceRepository serviceRepository, ServiceLineRepository serviceLineRepository, CustomerRepository customerRepository, RepairInvoiceRepository repairInvoiceRepository) {
+        super(invoiceRepository, serviceRepository, serviceLineRepository, customerRepository);
         this.repairInvoiceRepository = repairInvoiceRepository;
     }
+
 
     //Get all Repair Invoices
     public List<RepairInvoice> getAllRepairInvoices() {

@@ -1,5 +1,6 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
+import nl.novi.autogarage_roy_kersten.model.Repair;
 import nl.novi.autogarage_roy_kersten.model.Service;
 import nl.novi.autogarage_roy_kersten.service.ServiceServiceImpl;
 import org.springframework.http.ResponseEntity;
@@ -77,5 +78,14 @@ public abstract class ServiceController {
         return ResponseEntity.ok("service successfully deleted");
     }
 
+
+
+
+    //Update Service by idService
+    @PutMapping("/status/{idService}")
+    public ResponseEntity<Object> updateServiceStatusById(@PathVariable("idService") long idService, @RequestBody Service updateService) {
+        serviceServiceImpl.updateServiceStatusById(idService, updateService);
+        return ResponseEntity.ok("update Service successfully");
+    }
 
 }
