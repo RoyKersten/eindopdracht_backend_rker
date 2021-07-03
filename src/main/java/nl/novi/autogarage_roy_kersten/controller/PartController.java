@@ -1,7 +1,9 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Part;
+import nl.novi.autogarage_roy_kersten.service.ItemService;
 import nl.novi.autogarage_roy_kersten.service.ItemServiceImpl;
+import nl.novi.autogarage_roy_kersten.service.PartService;
 import nl.novi.autogarage_roy_kersten.service.PartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -59,11 +61,11 @@ import org.springframework.web.bind.annotation.*;
 
 public class PartController extends ItemController {
 
-    private PartServiceImpl partService;
+    private PartService partService;
 
     @Autowired
-    public PartController(@Qualifier("partServiceImpl") ItemServiceImpl itemServiceImpl, PartServiceImpl partService) {
-        super(itemServiceImpl);
+    public PartController(@Qualifier("partServiceImpl") ItemService itemService, PartService partService) {
+        super(itemService);
         this.partService = partService;
     }
 

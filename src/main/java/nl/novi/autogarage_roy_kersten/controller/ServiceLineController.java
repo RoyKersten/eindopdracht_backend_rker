@@ -45,7 +45,7 @@ public class ServiceLineController {
     private ServiceLineService serviceLineService;
 
 
-    public ServiceLineController(ServiceLineServiceImpl serviceLineService) {
+    public ServiceLineController(ServiceLineService serviceLineService) {
         this.serviceLineService = serviceLineService;
     }
 
@@ -89,17 +89,6 @@ public class ServiceLineController {
         serviceLineService.updateServiceLineById(idServiceLine, updateServiceLine);
         return ResponseEntity.ok("update serviceLine successfully");
     }
-
-
-    //calculate lineTotal ServiceLine
-//    @PostMapping(value = "")
-//    public ResponseEntity<Object> calculateLineTotal(@RequestBody ServiceLine serviceLine) {
-//        long newId = serviceLineService.addServiceLine(serviceLine);
-//        serviceLineService.calculateLineTotal(serviceLine);
-//        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idServiceLine}")
-//                .buildAndExpand(newId).toUri();
-//        return ResponseEntity.created(location).body(location);
-//    }
 
 
 }

@@ -7,6 +7,8 @@ public interface InvoiceService {
 
     //Methods
     Invoice getInvoiceById (long idService);
-    long addInvoice (Invoice invoice);
+    long createInvoice (Invoice invoice);
     void deleteInvoiceById(long idInvoice);
+    void updateInvoiceById(long idInvoice, Invoice invoice);
+    void updateInvoiceStatusById(long idInvoice, Invoice invoice);
 }

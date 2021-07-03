@@ -23,12 +23,14 @@ public abstract class ItemServiceImpl implements ItemService {
     //Methods
 
     //Create a new Item
+    @Override
     public long addItem(Item item) {
         Item storedItem = itemRepository.save(item);
         return storedItem.getIdItem();
     }
 
     //Get item by idItem
+    @Override
     public Item getItemById(long idItem) {
         if (!itemRepository.existsById(idItem)) {
             throw new RecordNotFoundException();
@@ -38,6 +40,7 @@ public abstract class ItemServiceImpl implements ItemService {
 
 
     //Delete Item by idItem
+    @Override
     public void deleteItemById(long idItem) {
         if (!itemRepository.existsById(idItem)) {
             throw new BadRequestException();

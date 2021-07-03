@@ -22,13 +22,20 @@ public class RepairServiceImpl extends ServiceServiceImpl implements RepairServi
     }
 
     //Get all Repairs
+    @Override
     public List<Repair> getAllRepairs() {
         return repairRepository.findAll();
     }
 
+    //    Get all Inspections with status "voltooid"
+    @Override
+    public List<Repair> getRepairByStatus(String serviceStatus) {
+        return repairRepository.findByServiceStatus("voltooid");
+    }
 
     //Update Repair by idService
     //Update Repair is a specific subclass to ensure the field IssuesToRepair is updated and differs from Inspection
+    @Override
     public void updateRepairById(long idService, Repair updateService) {
 
         if (!repairRepository.existsById(idService)) {

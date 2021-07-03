@@ -35,11 +35,13 @@ public class PartServiceImpl extends ItemServiceImpl implements PartService {
 
     //Methods
     //Get all Parts
+    @Override
     public List<Part> getAllParts() {
         return partRepository.findAll();
     }
 
     //Update Part by idItem
+    @Override
     public void updatePartById(long idItem, Part updateItem) {
 
         if (!partRepository.existsById(idItem)) {

@@ -12,7 +12,7 @@ VALUES
 
 INSERT INTO item (item_type, item_name, qty, price, brand, item_category)
 VALUES
-('part','zomerband 205/55/R16', '1', 55.00, 'Goodyear', 'banden'),
+('part','zomerband 205/55/R16', '5', 55.00, 'Goodyear', 'banden'),
 ('part','winterband 205/55/R16', '1', 60.00, 'Goodyear', 'banden'),
 ('part','remschijven voor', '1', 129.99, 'Bosch', 'remmen'),
 ('part','remschijven achter', '1', 149.99, 'Bosch', 'remmen'),

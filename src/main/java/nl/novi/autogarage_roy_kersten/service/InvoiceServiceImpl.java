@@ -29,8 +29,8 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
 
 
     //Methods
-
-    public long addInvoice(Invoice invoice) {
+    @Override
+    public long createInvoice(Invoice invoice) {
         Invoice storedInvoice = invoiceRepository.save(invoice);
 
         //set invoice status
@@ -46,12 +46,8 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
     }
 
 
-    //Get all Invoice
-    public List<Invoice> getAllInvoices() {
-        return invoiceRepository.findAll();
-    }
-
     //Get Invoice by idInvoice
+    @Override
     public Invoice getInvoiceById(long idInvoice) {
         if (!invoiceRepository.existsById(idInvoice)) {
             throw new RecordNotFoundException();
@@ -61,6 +57,7 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
 
 
     //Delete Invoice by idInvoice
+    @Override
     public void deleteInvoiceById(long idInvoice) {
         if (!invoiceRepository.existsById(idInvoice)) {
             throw new BadRequestException();
@@ -70,6 +67,7 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
 
 
     //Update Invoice by idInvoice
+    @Override
     public void updateInvoiceById(long idInvoice, Invoice updateInvoice) {
         if (!invoiceRepository.existsById(idInvoice)) {
             throw new BadRequestException();
@@ -85,6 +83,7 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
     }
 
     //Update invoiceStatus by idInvoice
+    @Override
     public void updateInvoiceStatusById(long idInvoice, Invoice updateInvoice) {
         if (!invoiceRepository.existsById(idInvoice)) {
             throw new BadRequestException();
@@ -181,11 +180,11 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.save(invoice);
     }
 
-    public void setIdInvoiceInServiceLine(Invoice invoice) {
+
+    public void printInvoice(Invoice invoice) {
 
 
     }
-
 
     public void createSaveInvoice(Invoice invoice) {
         Invoice storedServiceInvoice = invoiceRepository.save(invoice);
@@ -226,6 +225,6 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
             System.out.println("No Access to folder!");
         }
     }
-
-
 }
+
+

@@ -1,6 +1,8 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
+import nl.novi.autogarage_roy_kersten.service.InspectionInvoiceService;
 import nl.novi.autogarage_roy_kersten.service.InspectionInvoiceServiceImpl;
+import nl.novi.autogarage_roy_kersten.service.InvoiceService;
 import nl.novi.autogarage_roy_kersten.service.InvoiceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class InspectionInvoiceController extends InvoiceController {
 
-    private InspectionInvoiceServiceImpl inspectionInvoiceService;
+    private InspectionInvoiceService inspectionInvoiceService;
 
     @Autowired
-    public InspectionInvoiceController(@Qualifier("inspectionInvoiceServiceImpl") InvoiceServiceImpl invoiceServiceImpl, InspectionInvoiceServiceImpl inspectionInvoiceService) {
-        super(invoiceServiceImpl);
+    public InspectionInvoiceController(@Qualifier("inspectionInvoiceServiceImpl") InvoiceService invoiceService, InspectionInvoiceService inspectionInvoiceService) {
+        super(invoiceService);
         this.inspectionInvoiceService = inspectionInvoiceService;
     }
 

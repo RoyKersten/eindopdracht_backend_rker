@@ -15,11 +15,6 @@ import java.util.List;
 @DiscriminatorValue("repair_invoice")
 public class RepairInvoice extends Invoice {
 
-    //attributes
-//    @OneToOne
-//    //@JsonIgnore
-//    private Repair repair;
-
 
     //constructor
     public RepairInvoice() {
@@ -30,7 +25,6 @@ public class RepairInvoice extends Invoice {
     }
 
     //Getters and setters
-
 
 
 }

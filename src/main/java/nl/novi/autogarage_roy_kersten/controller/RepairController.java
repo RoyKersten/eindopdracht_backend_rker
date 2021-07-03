@@ -1,7 +1,9 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Repair;
+import nl.novi.autogarage_roy_kersten.service.RepairService;
 import nl.novi.autogarage_roy_kersten.service.RepairServiceImpl;
+import nl.novi.autogarage_roy_kersten.service.ServiceService;
 import nl.novi.autogarage_roy_kersten.service.ServiceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,12 +37,12 @@ import org.springframework.web.bind.annotation.*;
 public class RepairController extends ServiceController {
 
 
-    private RepairServiceImpl repairService;
+    private RepairService repairService;
 
 
     @Autowired
-    public RepairController(@Qualifier("repairServiceImpl") ServiceServiceImpl serviceServiceImpl, RepairServiceImpl repairService) {
-        super(serviceServiceImpl);
+    public RepairController(@Qualifier("repairServiceImpl") ServiceService serviceService, RepairService repairService) {
+        super(serviceService);
         this.repairService = repairService;
     }
 
@@ -49,6 +51,13 @@ public class RepairController extends ServiceController {
     @GetMapping(value = "")
     public ResponseEntity<Object> getAllRepairs() {
         return ResponseEntity.ok(repairService.getAllRepairs());
+    }
+
+
+    //Get repairs by serviceStatus "voltooid"
+    @GetMapping(value = "/calllist")
+    public ResponseEntity<Object> getRepairByStatus(String serviceStatus) {
+        return ResponseEntity.ok(repairService.getRepairByStatus(serviceStatus));
     }
 
 

@@ -6,9 +6,12 @@ import nl.novi.autogarage_roy_kersten.model.Service;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RepairRepository extends JpaRepository<Repair, Long> {
 
     //Methods
     Repair findById(long idService);
+    List<Repair> findByServiceStatus(String serviceStatus);
 }

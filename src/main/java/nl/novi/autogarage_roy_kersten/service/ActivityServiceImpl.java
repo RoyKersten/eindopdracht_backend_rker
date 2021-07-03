@@ -34,15 +34,17 @@ public class ActivityServiceImpl extends ItemServiceImpl implements ActivityServ
         this.activityRepository = activityRepository;
     }
 
-    //Methods
+
     //Methods
     //Get all Activities
+    @Override
     public List<Activity> getAllActivities() {
         return activityRepository.findAll();
     }
 
 
     //Update Activity by idItem
+    @Override
     public void updateActivityById(long idItem, Activity updateItem) {
 
         if (!activityRepository.existsById(idItem)) {

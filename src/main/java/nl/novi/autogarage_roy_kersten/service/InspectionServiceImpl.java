@@ -22,13 +22,22 @@ public class InspectionServiceImpl extends ServiceServiceImpl implements Inspect
     }
 
     //Get all Services
+    @Override
     public List<Inspection> getAllInspections() {
         return inspectionRepository.findAll();
+    }
+
+    //Get all Inspections with status "niet uitvoeren"
+
+    @Override
+    public List<Inspection> getInspectionByStatus(String serviceStatus) {
+        return inspectionRepository.findByServiceStatus("niet uitvoeren");
     }
 
 
     //Update Inspection by idService
     //Update Inspection is a specific subclass to ensure the field IssuesFoundInspection is updated and differs from Repair
+    @Override
     public void updateInspectionById(long idService, Inspection updateService) {
 
         if (!inspectionRepository.existsById(idService)) {

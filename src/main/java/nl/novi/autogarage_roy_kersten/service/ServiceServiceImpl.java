@@ -23,12 +23,20 @@ public abstract class ServiceServiceImpl implements ServiceService {
     //Methods
 
     //Create a new Service
+    @Override
     public long addService(Service service) {
+
+        //if serviceStatus is not equal to "uitvoeren", "voltooid" or "niet uitvoeren" throw bad exception
+        if (!(service.getServiceStatus().equals("uitvoeren") || service.getServiceStatus().equals("voltooid") || service.getServiceStatus().equals("niet uitvoeren"))) {     //Service can only have status "uitvoeren" , "voltooid" or "niet uitvoeren"
+            throw new BadRequestException();
+        }
+
         Service storedService = serviceRepository.save(service);
         return storedService.getIdService();
     }
 
     //Get Service by idService
+    @Override
     public Service getServiceById(long idService) {
         if (!serviceRepository.existsById(idService)) {
             throw new RecordNotFoundException();
@@ -38,6 +46,7 @@ public abstract class ServiceServiceImpl implements ServiceService {
 
 
     //Delete Service by idService
+    @Override
     public void deleteServiceById(long idService) {
         if (!serviceRepository.existsById(idService)) {
             throw new BadRequestException();
@@ -46,6 +55,7 @@ public abstract class ServiceServiceImpl implements ServiceService {
     }
 
 
+    @Override
     public void updateServiceStatusById(long idService, Service updateService) {
 
         if (!serviceRepository.existsById(idService)) {
@@ -53,7 +63,7 @@ public abstract class ServiceServiceImpl implements ServiceService {
         }
 
         Service storedService = serviceRepository.findById(idService);
-        if (!(updateService.getServiceStatus().equals("uitvoeren") || updateService.getServiceStatus().equals("voltooid"))) {     //Service can only have status "uitvoeren" or "voltooid"
+        if (!(updateService.getServiceStatus().equals("uitvoeren") || updateService.getServiceStatus().equals("voltooid") || updateService.getServiceStatus().equals("niet uitvoeren"))) {     //Service can only have status "uitvoeren" , "voltooid" or "niet uitvoeren"
             throw new BadRequestException();
         }
 

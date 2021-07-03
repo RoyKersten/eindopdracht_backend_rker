@@ -1,6 +1,7 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Invoice;
+import nl.novi.autogarage_roy_kersten.service.InvoiceService;
 import nl.novi.autogarage_roy_kersten.service.InvoiceServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,18 +11,18 @@ import java.net.URI;
 
 public abstract class InvoiceController {
 
-    private InvoiceServiceImpl invoiceServiceImpl;
+    private InvoiceService invoiceService;
 
-    public InvoiceController(InvoiceServiceImpl invoiceServiceImpl) {
-        this.invoiceServiceImpl = invoiceServiceImpl;
+    public InvoiceController(InvoiceService invoiceService) {
+        this.invoiceService = invoiceService;
     }
 
     //Methods
 
     //Create a new Invoice
     @PostMapping(value = "")
-    public ResponseEntity<Object> addInvoice(@RequestBody Invoice invoice) {
-        long newId = invoiceServiceImpl.addInvoice(invoice);
+    public ResponseEntity<Object> createInvoice(@RequestBody Invoice invoice) {
+        long newId = invoiceService.createInvoice(invoice);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idInvoice}")
                 .buildAndExpand(newId).toUri();
         return ResponseEntity.created(location).body(location);
@@ -31,7 +32,7 @@ public abstract class InvoiceController {
     //Get Invoice by idInvoices
     @GetMapping("/{idInvoice}")
     public ResponseEntity<Object> getInvoiceById(@PathVariable("idInvoice") long idInvoice) {
-        Invoice invoice = invoiceServiceImpl.getInvoiceById(idInvoice);
+        Invoice invoice = invoiceService.getInvoiceById(idInvoice);
         return ResponseEntity.ok(invoice);
     }
 
@@ -39,14 +40,14 @@ public abstract class InvoiceController {
     //Delete Invoice by idInvoice
     @DeleteMapping("/{idInvoice}")
     public ResponseEntity<Object> deleteInvoiceById(@PathVariable("idInvoice") long idInvoice) {
-        invoiceServiceImpl.deleteInvoiceById(idInvoice);
+        invoiceService.deleteInvoiceById(idInvoice);
         return ResponseEntity.ok("Invoice successfully deleted");
     }
 
     //Update Invoice by idInvoice
     @PutMapping("/{idInvoice}")
     public ResponseEntity<Object> updateInvoiceById(@PathVariable("idInvoice") long idInvoice, @RequestBody Invoice updateInvoice) {
-        invoiceServiceImpl.updateInvoiceById(idInvoice, updateInvoice);
+        invoiceService.updateInvoiceById(idInvoice, updateInvoice);
         return ResponseEntity.ok("update Invoice successfully");
     }
 
@@ -54,7 +55,7 @@ public abstract class InvoiceController {
     //Update InvoiceStatus by idInvoice
     @PutMapping("/status/{idInvoice}")
     public ResponseEntity<Object> updateInvoiceStatusById(@PathVariable("idInvoice") long idInvoice, @RequestBody Invoice updateInvoice) {
-        invoiceServiceImpl.updateInvoiceStatusById(idInvoice, updateInvoice);
+        invoiceService.updateInvoiceStatusById(idInvoice, updateInvoice);
         return ResponseEntity.ok("update InvoiceStatus successfully");
     }
 

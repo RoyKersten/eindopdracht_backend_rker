@@ -1,7 +1,9 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Activity;
+import nl.novi.autogarage_roy_kersten.service.ActivityService;
 import nl.novi.autogarage_roy_kersten.service.ActivityServiceImpl;
+import nl.novi.autogarage_roy_kersten.service.ItemService;
 import nl.novi.autogarage_roy_kersten.service.ItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -54,11 +56,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/items/activities")
 public class ActivityController extends ItemController {
 
-    private ActivityServiceImpl activityService;
+    private ActivityService activityService;
 
     @Autowired
-    public ActivityController(@Qualifier("activityServiceImpl") ItemServiceImpl itemServiceImpl, ActivityServiceImpl activityService) {
-        super(itemServiceImpl);
+    public ActivityController(@Qualifier("activityServiceImpl") ItemService itemService, ActivityService activityService) {
+        super(itemService);
         this.activityService = activityService;
     }
 

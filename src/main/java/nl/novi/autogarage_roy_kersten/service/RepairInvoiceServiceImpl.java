@@ -21,6 +21,7 @@ public class RepairInvoiceServiceImpl extends InvoiceServiceImpl implements Repa
 
 
     //Get all Repair Invoices
+    @Override
     public List<RepairInvoice> getAllRepairInvoices() {
         return repairInvoiceRepository.findAll();
     }

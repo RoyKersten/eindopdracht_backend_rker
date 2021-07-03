@@ -29,10 +29,10 @@ public abstract class Service {
 
     @Column (name = "service_date")
     @Temporal(TemporalType.DATE)
-    private Date serviceDate;             // Date format ????????
+    private Date serviceDate;
 
     @Column (name = "service_status")
-    private String serviceStatus;           //zou ook uit een list geselecteerd kunnen worden, dan is het altijd een vaste omschrijving ??? !!!
+    private String serviceStatus;
 
     @OneToMany (mappedBy = "service")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
