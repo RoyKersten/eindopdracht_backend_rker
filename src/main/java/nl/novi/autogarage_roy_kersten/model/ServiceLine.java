@@ -163,4 +163,5 @@ public class ServiceLine {
     public void setInvoice(Invoice invoice) {
         this.invoice = invoice;
     }
+
 }

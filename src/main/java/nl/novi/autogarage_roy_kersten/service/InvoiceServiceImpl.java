@@ -2,14 +2,23 @@ package nl.novi.autogarage_roy_kersten.service;
 
 import nl.novi.autogarage_roy_kersten.exception.BadRequestException;
 import nl.novi.autogarage_roy_kersten.exception.RecordNotFoundException;
-import nl.novi.autogarage_roy_kersten.model.*;
-import nl.novi.autogarage_roy_kersten.repository.*;
+import nl.novi.autogarage_roy_kersten.model.Customer;
+import nl.novi.autogarage_roy_kersten.model.Invoice;
+import nl.novi.autogarage_roy_kersten.model.Service;
+import nl.novi.autogarage_roy_kersten.model.ServiceLine;
+import nl.novi.autogarage_roy_kersten.repository.CustomerRepository;
+import nl.novi.autogarage_roy_kersten.repository.InvoiceRepository;
+import nl.novi.autogarage_roy_kersten.repository.ServiceLineRepository;
+import nl.novi.autogarage_roy_kersten.repository.ServiceRepository;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class InvoiceServiceImpl implements InvoiceService {
@@ -40,7 +49,7 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
         calculateInvoiceSubtotal(storedInvoice);
         calculateInvoiceVatAmount(storedInvoice);
         calculateInvoiceTotal(storedInvoice);
-        createSaveInvoice(storedInvoice);
+        printInvoice(storedInvoice);
 
         return storedInvoice.getIdInvoice();
     }
@@ -182,11 +191,6 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
 
 
     public void printInvoice(Invoice invoice) {
-
-
-    }
-
-    public void createSaveInvoice(Invoice invoice) {
         Invoice storedServiceInvoice = invoiceRepository.save(invoice);
 
         long storedServiceId = storedServiceInvoice.getService().getIdService();
@@ -194,37 +198,73 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
 
         try {
 
-            File invoiceFile = new File("/Users/roykersten/Documents/IdeaProjects/Novi/ExternalFolder/Invoice.txt");
+
+           // String path = "/users/roykersten/documents/invoice.txt";
+            File invoiceFile = new File(invoice.getPathName());
             FileWriter invoicePrintLine = new FileWriter(invoiceFile);
 
             long serviceLineCounter = 1;                                                                                                        //set serviceLineCounter to 1, loop should executed minimal 1 time before final counter is set based on number of ServiceLines to be Invoiced
+
+            invoicePrintLine.write("\n");
+
+            invoicePrintLine.write(String.format("%-10s \r\n", "\tFACTUUR"));
+
+            invoicePrintLine.write("\n");
+
+            invoicePrintLine.write(String.format("%-15s%-65s%-10s \r\n", "\tklantnummer:", invoice.getCustomer().getIdCustomer(), "AUTOGARAGE KERSTEN"));
+            invoicePrintLine.write(String.format("%-15s%-65s%-10s \r\n", "\tvoornaam:", invoice.getCustomer().getFirstName(), "Autosnelweg A73"));
+            invoicePrintLine.write(String.format("%-15s%-65s%-10s \r\n", "\tachternaam:", invoice.getCustomer().getLastName(), "Horst aan de Maas"));
+            invoicePrintLine.write(String.format("%-15s%-65s%-10s \r\n", "\temail:", invoice.getCustomer().getEmail(), "mail: autograrage.kersten@gmail.com"));
+            invoicePrintLine.write(String.format("%-15s%-65s%-10s \r\n", "\ttelefoon:", invoice.getCustomer().getPhoneNumber(), "tel: +31612345678"));
+
+            invoicePrintLine.write("\n");
+            invoicePrintLine.write("\n");
+
+            invoicePrintLine.write(String.format("%-15s%-10s%-10s%-10s \r\n", "\tFactuurnummer: ", invoice.getIdInvoice(), "Servicenummer: ", invoice.getService().getIdService()));
+
+            invoicePrintLine.write("\t");
+
+            for (int i = 0; i < 115; i++) {
+                invoicePrintLine.write("-");
+
+            }
+
+            invoicePrintLine.write("\n");
+            invoicePrintLine.write("\t");
+            invoicePrintLine.write(String.format("%-10s%-10s%-40s%-10s%-15s%-15s%-15s \r\n", "nummer", "qty.", "artikel naam", "prijs", "subtotaal", "BTW bedrag", "TOTAAL"));
 
             for (int i = 0; i < serviceLineCounter; i++) {                                                                                      //loop based on number of serviceLines which need to be invoiced per idService
                 long storedServiceLineId = storedService.getServiceLine().get(i).getIdServiceLine();                                            //get serviceLineId corresponding with idService which needs to be invoiced (based on index)
                 ServiceLine storedServiceLine = serviceLineRepository.findById(storedServiceLineId);                                            //store serviceLine
                 serviceLineCounter = serviceLineRepository.countByServiceIdService(storedServiceLine.getService().getIdService());              //Set serviceLineCounter based on number of ServiceLines with corresponding idService
 
-                invoicePrintLine.write("        ");
-                String convertType = Long.toString(storedServiceLine.getServiceLineNumber());
-                invoicePrintLine.write(convertType);
-                invoicePrintLine.write("    ");
-                convertType = Integer.toString(storedServiceLine.getQty());
-                invoicePrintLine.write(convertType);
-                invoicePrintLine.write("    ");
-                invoicePrintLine.write(storedServiceLine.getQty());
-                invoicePrintLine.write("     ");
-                invoicePrintLine.write(storedServiceLine.getItemName());
-                invoicePrintLine.write("    ");
-                convertType = Float.toString(storedServiceLine.getPrice());
-                invoicePrintLine.write(convertType);
-                invoicePrintLine.write("\n");
+                invoicePrintLine.write("\t");
+                invoicePrintLine.write(String.format("%-10s%-10s%-40s%-10s%-15s%-15s%-15s \r\n", storedServiceLine.getServiceLineNumber(), storedServiceLine.getQty(), storedServiceLine.getItemName(), storedServiceLine.getPrice(), storedServiceLine.getLineSubTotal(), storedServiceLine.getVatAmount(), storedServiceLine.getLineTotal()));
             }
+
+            invoicePrintLine.write("\t");
+            for (int i = 0; i < 115; i++) {
+                invoicePrintLine.write("-");
+            }
+
+            invoicePrintLine.write("\n");
+            invoicePrintLine.write("\t");
+
+            invoicePrintLine.write(String.format("%-70s%-15s%-15s%-15s \r\n", "TOTAAL FACTUUR", invoice.getInvoiceSubtotal(), invoice.getVatAmount(), invoice.getInvoiceTotal()));
+
+            invoicePrintLine.write("\n");
+            invoicePrintLine.write("\t");
+            invoicePrintLine.write("Toegepast BTW percentage: " + invoice.getVatRate() * 100 + "%");
+
             invoicePrintLine.close();
+
 
         } catch (IOException e) {
             System.out.println("No Access to folder!");
         }
+
     }
+
 }
 
 

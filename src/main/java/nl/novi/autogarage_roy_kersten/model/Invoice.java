@@ -42,6 +42,9 @@ public abstract class Invoice {
     @Column(name = "invoice_total")
     private float invoiceTotal;
 
+    @Column(name = "path_name")
+    private String pathName;
+
     @OneToMany (mappedBy = "invoice")
     @JsonIgnore
     private List<ServiceLine> serviceLine;
@@ -56,19 +59,20 @@ public abstract class Invoice {
     public Invoice() {
     }
 
-    public Invoice(Long idInvoice, String invoiceStatus, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, List<ServiceLine> serviceLine, Customer customer, Service service) {
+    public Invoice(Long idInvoice, String invoiceStatus, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, String pathName, List<ServiceLine> serviceLine, Customer customer, Service service) {
         this.idInvoice = idInvoice;
         this.invoiceStatus = invoiceStatus;
         this.invoiceSubtotal = invoiceSubtotal;
         this.vatRate = vatRate;
         this.vatAmount = vatAmount;
         this.invoiceTotal = invoiceTotal;
+        this.pathName = pathName;
         this.serviceLine = serviceLine;
         this.customer = customer;
         this.service = service;
     }
 
-//Getters and Setters
+    //Getters and Setters
 
     public Long getIdInvoice() {
         return idInvoice;
@@ -140,6 +144,14 @@ public abstract class Invoice {
 
     public void setService(Service service) {
         this.service = service;
+    }
+
+    public String getPathName() {
+        return pathName;
+    }
+
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
     }
 
     //Methods

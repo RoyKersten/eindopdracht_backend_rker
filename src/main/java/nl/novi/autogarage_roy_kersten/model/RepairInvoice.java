@@ -20,8 +20,8 @@ public class RepairInvoice extends Invoice {
     public RepairInvoice() {
     }
 
-    public RepairInvoice(Long idInvoice, String invoiceStatus, float lineTotal, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, List<ServiceLine> serviceLine, Customer customer, Service service) {
-        super(idInvoice, invoiceStatus, invoiceSubtotal, vatRate, vatAmount, invoiceTotal, serviceLine, customer, service);
+    public RepairInvoice(Long idInvoice, String invoiceStatus, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, String pathName, List<ServiceLine> serviceLine, Customer customer, Service service) {
+        super(idInvoice, invoiceStatus, invoiceSubtotal, vatRate, vatAmount, invoiceTotal, pathName, serviceLine, customer, service);
     }
 
     //Getters and setters
