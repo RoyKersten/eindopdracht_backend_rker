@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+import java.util.Optional;
 
 /**
  * The CustomerServiceImpl class implements the methods defined in the CustomerService Interface and is an intermediate
@@ -25,6 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     //Attributes
     private CustomerRepository customerRepository;
+
 
     @Autowired
     //Constructors
@@ -60,6 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
     //Delete Customer by idCustomer
     @Override
     public void deleteCustomerById(long idCustomer) {
+
         if (!customerRepository.existsById(idCustomer)) {
             throw new BadRequestException();
         }
@@ -71,10 +73,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void updateCustomerById(long idCustomer, Customer updateCustomer) {
 
+
         if (!customerRepository.existsById(idCustomer)) {
             throw new BadRequestException();
 
         }
+
         Customer storedCustomer = customerRepository.findById(idCustomer);
         storedCustomer.setFirstName(updateCustomer.getFirstName());
         storedCustomer.setLastName(updateCustomer.getLastName());

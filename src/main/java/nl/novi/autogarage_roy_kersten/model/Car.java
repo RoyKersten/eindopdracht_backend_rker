@@ -41,25 +41,21 @@ public class Car {
     @ManyToOne
     private Customer customer;
 
-//    @OneToOne (mappedBy = "car")
-//    private CarPaper carPaper;
-
     @Lob
     byte[] carPaper;
 
     // Constructors
     public Car() {}
 
-    public Car(Long idCar, String brand, String model, String yearOfConstruction, String licensePlateNumber, List<Service> service, Customer customer, byte[] carPaper) {
+    public Car(Long idCar, String brand, String model, String yearOfConstruction, String licensePlateNumber) {
         this.idCar = idCar;
         this.brand = brand;
         this.model = model;
         this.yearOfConstruction = yearOfConstruction;
         this.licensePlateNumber = licensePlateNumber;
-        this.service = service;
-        this.customer = customer;
-        this.carPaper = carPaper;
+
     }
+
 
     // Getters and Setters
     public Long getIdCar() {

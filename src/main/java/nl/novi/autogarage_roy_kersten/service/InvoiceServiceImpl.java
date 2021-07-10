@@ -10,16 +10,12 @@ import nl.novi.autogarage_roy_kersten.repository.CustomerRepository;
 import nl.novi.autogarage_roy_kersten.repository.InvoiceRepository;
 import nl.novi.autogarage_roy_kersten.repository.ServiceLineRepository;
 import nl.novi.autogarage_roy_kersten.repository.ServiceRepository;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class InvoiceServiceImpl implements InvoiceService {
 
@@ -199,7 +195,7 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
         try {
 
 
-           // String path = "/users/roykersten/documents/invoice.txt";
+           // String path has to be defined in Json;
             File invoiceFile = new File(invoice.getPathName());
             FileWriter invoicePrintLine = new FileWriter(invoiceFile);
 
