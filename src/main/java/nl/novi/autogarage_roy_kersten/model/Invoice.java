@@ -28,7 +28,8 @@ public abstract class Invoice {
     private Long idInvoice;
 
     @Column(name = "invoice_status")
-    private String invoiceStatus;
+    @Enumerated(EnumType.STRING)                            //ensure that enum is presented as a string in the database
+    private InvoiceStatus invoiceStatus;
 
     @Column(name = "invoice_subtotal")
     private float invoiceSubtotal;
@@ -59,7 +60,7 @@ public abstract class Invoice {
     public Invoice() {
     }
 
-    public Invoice(Long idInvoice, String invoiceStatus, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, String pathName, List<ServiceLine> serviceLine, Customer customer, Service service) {
+    public Invoice(Long idInvoice, InvoiceStatus invoiceStatus, float invoiceSubtotal, float vatRate, float vatAmount, float invoiceTotal, String pathName, List<ServiceLine> serviceLine, Customer customer, Service service) {
         this.idInvoice = idInvoice;
         this.invoiceStatus = invoiceStatus;
         this.invoiceSubtotal = invoiceSubtotal;
@@ -82,11 +83,11 @@ public abstract class Invoice {
         this.idInvoice = idInvoice;
     }
 
-    public String getInvoiceStatus() {
+    public InvoiceStatus getInvoiceStatus() {
         return invoiceStatus;
     }
 
-    public void setInvoiceStatus(String invoiceStatus) {
+    public void setInvoiceStatus(InvoiceStatus invoiceStatus) {
         this.invoiceStatus = invoiceStatus;
     }
 

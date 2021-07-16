@@ -1,0 +1,18 @@
+
+	FACTUUR   
+
+	klantnummer:  1                                                                AUTOGARAGE KERSTEN 
+	voornaam:     Voornaam                                                         Autosnelweg A73 
+	achternaam:   Achternaam                                                       Horst aan de Maas 
+	email:        voornaam.achternaam@mail                                         mail: autograrage.kersten@gmail.com 
+	telefoon:     06                                                               tel: +31612345678 
+
+
+	Factuurnummer: 1         Servicenummer: 1          
+	-------------------------------------------------------------------------------------------------------------------
+	nummer    qty.      artikel naam                            prijs     subtotaal      BTW bedrag     TOTAAL          
+	1         2         Test Item                               100.0     200.0          42.0           242.0           
+	-------------------------------------------------------------------------------------------------------------------
+	TOTAAL FACTUUR                                                        200.0          42.0           242.0           
+
+	Toegepast BTW percentage: 21.0%

@@ -79,7 +79,7 @@ class CustomerServiceTest {
 
     @Test
     void getCustomerByIdTest() {
-        //Arrange => create customer object as input for test
+        //Arrange => create mock customer object as input for test
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         when(customerRepository.existsById(1L)).thenReturn(true);
         when(customerRepository.findById(1L)).thenReturn(customer);
@@ -121,7 +121,7 @@ class CustomerServiceTest {
         //Act => call method updateCustomerById
         customerService.updateCustomerById(1L, updateCustomer);
 
-        //Assert => check if storedCustomer has now the values of updateCustomer
+        //Assert => check if storedCustomer has been updated with values of updateCustomer
         assertThat(storedCustomer.getFirstName()).isEqualTo("Karel");
         assertThat(storedCustomer.getLastName()).isEqualTo("Hoekstra");
         assertThat(storedCustomer.getPhoneNumber()).isEqualTo("+31612345678");

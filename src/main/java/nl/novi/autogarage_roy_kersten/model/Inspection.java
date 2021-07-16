@@ -3,6 +3,7 @@ package nl.novi.autogarage_roy_kersten.model;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,11 @@ public class Inspection extends Service {
     //constructor
     public Inspection () {}
 
-    public Inspection(Long idService, Date serviceDate, String serviceStatus, Customer customer, List<ServiceLine> serviceLine, String issuesFoundInspection, Car car) {
+    public Inspection(Long idService, ServiceStatus serviceStatus) {
+        super(idService, serviceStatus);
+    }
+
+    public Inspection(Long idService, LocalDate serviceDate, ServiceStatus serviceStatus, Customer customer, String issuesFoundInspection, List<ServiceLine> serviceLine, Car car) {
         super(idService, serviceDate, serviceStatus, customer, serviceLine, car);
         this.issuesFoundInspection = issuesFoundInspection;
     }

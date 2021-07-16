@@ -36,16 +36,6 @@ public class ServiceLineServiceImpl implements ServiceLineService {
             throw new BadRequestException("Qty mag niet kleiner zijn dan 1");
         }
 
-        //check if there servicelines with same idService exists and are invoiced already, if yes, idService cannot be used anymore, Service is closed
-//        long idService = serviceLine.getService().getIdService();
-
-//        if(serviceLineRepository.existsById(idService)) {
-//            ServiceLine validateInvoicedServiceLines = serviceLineRepository.findById(idService);
-//            if (validateInvoicedServiceLines.getInvoice() != null) {
-//                throw new BadRequestException("Er bestaan serviceLines met hetzelfde idService die gefactureerd zijn, service is afgesloten en kan niet meer worden gebruikt");
-//            }
-//        }
-
         //Check if inventory level is sufficient for selected item
         checkInventoryLevel(serviceLine);
 
@@ -70,7 +60,7 @@ public class ServiceLineServiceImpl implements ServiceLineService {
         return serviceLineRepository.findAll();
     }
 
-    //Get item by idServiceLine
+    //Get ServiceLine by idServiceLine
     @Override
     public ServiceLine getServiceLineById(long idServiceLine) {
         if (!serviceLineRepository.existsById(idServiceLine)) {
@@ -80,14 +70,14 @@ public class ServiceLineServiceImpl implements ServiceLineService {
     }
 
 
-    //Delete Car by idServiceLine
+    //Delete ServiceLine by idServiceLine
     @Override
     public void deleteServiceLineById(long idServiceLine) {
         if (!serviceLineRepository.existsById(idServiceLine)) {
             throw new BadRequestException();
         }
 
-        updateInventoryDelete(idServiceLine);                                                                           //Before serviceLine will be deleted, the inventory Qty will be restored and put on stock again
+        updateInventoryAfterDeleteServiceLine(idServiceLine);                                                           //Before serviceLine will be deleted, the inventory Qty will be restored and put on stock again
         serviceLineRepository.deleteById(idServiceLine);                                                                //Delete serviceLine with corresponding id
     }
 
@@ -95,6 +85,8 @@ public class ServiceLineServiceImpl implements ServiceLineService {
     //Update item by idServiceLine
     @Override
     public void updateServiceLineById(long idServiceLine, ServiceLine serviceLine) {
+        //Reverse inventory of initial transaction to ensure inventory level is corrected correctly
+
         //find initial booked serviceLine in database
         ServiceLine storedServiceLine = serviceLineRepository.findById(idServiceLine);
 
@@ -109,12 +101,13 @@ public class ServiceLineServiceImpl implements ServiceLineService {
         }
 
         //if serviceLine has been invoiced already it is not allowed to change the serviceLine, throw BadRequestException
-        if (storedServiceLine.getInvoice()!=null) {                                                                     //When serviceLine has been invoiced already, throw BadRequestException
+        if (storedServiceLine.getInvoice() != null) {                                                                     //When serviceLine has been invoiced already, throw BadRequestException
             throw new BadRequestException("serviceLine is al gefactureerd en mag niet aangepast worden");
         }
 
-        //Reverse inventory of initial transaction to ensure inventory level is corrected correctly
         reverseInventory(idServiceLine);
+
+
 
         //Check if inventory level is sufficient for selected item
         checkInventoryLevel(serviceLine);
@@ -157,7 +150,7 @@ public class ServiceLineServiceImpl implements ServiceLineService {
 
     //set unique serviceLineNumber per idService
     public ServiceLine setServiceLineNumber(ServiceLine serviceLine) {
-        ServiceLine storedServiceLine = serviceLineRepository.save(serviceLine);
+        ServiceLine storedServiceLine = serviceLineRepository.save(serviceLine);                                        //by saving the serviceLine the new line counter can be determined
 
         long serviceLineCounter = serviceLineRepository.countByServiceIdService(storedServiceLine.getService().getIdService());     //Determine the serviceLine number
         storedServiceLine.setServiceLineNumber(serviceLineCounter);
@@ -229,7 +222,7 @@ public class ServiceLineServiceImpl implements ServiceLineService {
         return itemRepository.save(storedItem);
     }
 
-    public Item updateInventoryDelete(long idServiceLine) {
+    public Item updateInventoryAfterDeleteServiceLine(long idServiceLine) {
 
         ServiceLine storedServiceLine = serviceLineRepository.getById(idServiceLine);                                   //save serviceLine
 

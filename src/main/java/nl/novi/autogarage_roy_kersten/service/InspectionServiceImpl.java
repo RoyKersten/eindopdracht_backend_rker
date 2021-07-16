@@ -2,6 +2,7 @@ package nl.novi.autogarage_roy_kersten.service;
 
 import nl.novi.autogarage_roy_kersten.exception.BadRequestException;
 import nl.novi.autogarage_roy_kersten.model.Inspection;
+import nl.novi.autogarage_roy_kersten.model.ServiceStatus;
 import nl.novi.autogarage_roy_kersten.repository.InspectionRepository;
 import nl.novi.autogarage_roy_kersten.repository.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,9 @@ public class InspectionServiceImpl extends ServiceServiceImpl implements Inspect
     }
 
     //Get all Inspections with status "niet uitvoeren"
-
     @Override
-    public List<Inspection> getInspectionByStatus(String serviceStatus) {
-        return inspectionRepository.findByServiceStatus("niet uitvoeren");
+    public List<Inspection> getInspectionByStatus(ServiceStatus serviceStatus) {
+        return inspectionRepository.findByServiceStatus(ServiceStatus.NIET_UITVOEREN);
     }
 
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -28,11 +29,11 @@ public abstract class Service {
     private Long idService;
 
     @Column (name = "service_date")
-    @Temporal(TemporalType.DATE)
-    private Date serviceDate;
+    private LocalDate serviceDate;
 
     @Column (name = "service_status")
-    private String serviceStatus;
+    @Enumerated(EnumType.STRING)                            //ensure that enum is presented as a string in the database
+    private ServiceStatus serviceStatus;
 
     @OneToMany (mappedBy = "service")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
@@ -50,7 +51,12 @@ public abstract class Service {
      //constructor
     public Service() {}
 
-    public Service(Long idService, Date serviceDate, String serviceStatus, Customer customer, List<ServiceLine> serviceLine,Car car) {
+    public Service(Long idService, ServiceStatus serviceStatus){
+        this.idService = idService;
+        this.serviceStatus = serviceStatus;
+    }
+
+    public Service(Long idService, LocalDate serviceDate, ServiceStatus serviceStatus, Customer customer, List<ServiceLine> serviceLine,Car car) {
         this.idService = idService;
         this.serviceDate = serviceDate;
         this.serviceStatus = serviceStatus;
@@ -70,19 +76,19 @@ public abstract class Service {
         this.idService = idService;
     }
 
-    public Date getServiceDate() {
+    public LocalDate getServiceDate() {
         return serviceDate;
     }
 
-    public void setServiceDate(Date serviceDate) {
+    public void setServiceDate(LocalDate serviceDate) {
         this.serviceDate = serviceDate;
     }
 
-    public String getServiceStatus() {
+    public ServiceStatus getServiceStatus() {
         return serviceStatus;
     }
 
-    public void setServiceStatus(String serviceStatus) {
+    public void setServiceStatus(ServiceStatus serviceStatus) {
         this.serviceStatus = serviceStatus;
     }
 

@@ -33,9 +33,6 @@ class CarServiceTest {
     @Captor
     ArgumentCaptor<Car> carCaptor;
 
-
-    private MultipartFile MockMultipartFile;
-
     @Test
     void addCarTest() {
         //Arrange => create car as input for test
@@ -149,10 +146,12 @@ class CarServiceTest {
         carPaper.setCarPaper(file.getBytes());
         when(carRepository.save(optionalCarPaper)).thenReturn(carPaper);                                                //create mock object when carRepository.save() is called
 
-
+        //Act call uploadCarPaper Method
         carService.uploadCarPaper(1L, file);
 
-        assertThat(carPaper.getCarPaper()).isNotEmpty();                                                                //check if carPaper is not empty
+        //Assert
+        verify(carRepository,times(1)).findById(idCarPaper);                                     //verify if carRepository.findById has been called one time
+        assertThat(carPaper.getCarPaper()).isNotEmpty();                                                                //verify if carPaper is not empty
     }
 
     @Test
@@ -174,11 +173,11 @@ class CarServiceTest {
 
 
         //Act call getCarPaper Method
-        var verifyCarPaperNotEmpty = carService.getCarPaper(1L);
+        var validateCarPaperNotEmpty = carService.getCarPaper(1L);
 
         //Assert
         verify(carRepository,times(1)).findById(idCarPaper);                                     //verify if carRepository.findById has been called one time
-        assertThat(verifyCarPaperNotEmpty).isNotEmpty();                                                                //verify if carPaper is not empty
+        assertThat(validateCarPaperNotEmpty).isNotEmpty();                                                              //verify if carPaper is not empty
 
 
     }

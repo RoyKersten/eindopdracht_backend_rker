@@ -5,6 +5,7 @@ import nl.novi.autogarage_roy_kersten.exception.RecordNotFoundException;
 import nl.novi.autogarage_roy_kersten.model.Invoice;
 import nl.novi.autogarage_roy_kersten.model.Repair;
 import nl.novi.autogarage_roy_kersten.model.Service;
+import nl.novi.autogarage_roy_kersten.model.ServiceStatus;
 import nl.novi.autogarage_roy_kersten.repository.ServiceRepository;
 
 import java.util.List;
@@ -26,8 +27,8 @@ public abstract class ServiceServiceImpl implements ServiceService {
     @Override
     public long addService(Service service) {
 
-        //if serviceStatus is not equal to "uitvoeren", "voltooid" or "niet uitvoeren" throw bad exception
-        if (!(service.getServiceStatus().equals("uitvoeren") || service.getServiceStatus().equals("voltooid") || service.getServiceStatus().equals("niet uitvoeren"))) {     //Service can only have status "uitvoeren" , "voltooid" or "niet uitvoeren"
+        //if serviceStatus is not equal to "UITVOEREN", "VOLTOOID" or "NIET_UITVOEREN" throw bad exception
+        if (!(service.getServiceStatus().equals(ServiceStatus.UITVOEREN) || service.getServiceStatus().equals(ServiceStatus.VOLTOOID) || service.getServiceStatus().equals(ServiceStatus.NIET_UITVOEREN))) {     //Service can only have status "uitvoeren" , "voltooid" or "niet uitvoeren"
             throw new BadRequestException();
         }
 
@@ -63,7 +64,7 @@ public abstract class ServiceServiceImpl implements ServiceService {
         }
 
         Service storedService = serviceRepository.findById(idService);
-        if (!(updateService.getServiceStatus().equals("uitvoeren") || updateService.getServiceStatus().equals("voltooid") || updateService.getServiceStatus().equals("niet uitvoeren"))) {     //Service can only have status "uitvoeren" , "voltooid" or "niet uitvoeren"
+        if (!(updateService.getServiceStatus().equals(ServiceStatus.UITVOEREN) || updateService.getServiceStatus().equals(ServiceStatus.VOLTOOID) || updateService.getServiceStatus().equals(ServiceStatus.NIET_UITVOEREN))) {     //Service can only have status "uitvoeren" , "voltooid" or "niet uitvoeren"
             throw new BadRequestException();
         }
 

@@ -2,10 +2,7 @@ package nl.novi.autogarage_roy_kersten.service;
 
 import nl.novi.autogarage_roy_kersten.exception.BadRequestException;
 import nl.novi.autogarage_roy_kersten.exception.RecordNotFoundException;
-import nl.novi.autogarage_roy_kersten.model.Customer;
-import nl.novi.autogarage_roy_kersten.model.Invoice;
-import nl.novi.autogarage_roy_kersten.model.Service;
-import nl.novi.autogarage_roy_kersten.model.ServiceLine;
+import nl.novi.autogarage_roy_kersten.model.*;
 import nl.novi.autogarage_roy_kersten.repository.CustomerRepository;
 import nl.novi.autogarage_roy_kersten.repository.InvoiceRepository;
 import nl.novi.autogarage_roy_kersten.repository.ServiceLineRepository;
@@ -39,7 +36,7 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
         Invoice storedInvoice = invoiceRepository.save(invoice);
 
         //set invoice status
-        storedInvoice.setInvoiceStatus("open");
+        storedInvoice.setInvoiceStatus(InvoiceStatus.OPEN);
 
         getCustomerInformation(storedInvoice);
         calculateInvoiceSubtotal(storedInvoice);
@@ -95,7 +92,7 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
 
         }
         Invoice storedInvoice = invoiceRepository.findById(idInvoice);
-        if (!(updateInvoice.getInvoiceStatus().equals("open") || updateInvoice.getInvoiceStatus().equals("betaald"))) {     //Invoice can only have status "open" or "betaald"
+        if (!(updateInvoice.getInvoiceStatus().equals(InvoiceStatus.OPEN) || updateInvoice.getInvoiceStatus().equals(InvoiceStatus.BETAALD))) {     //Invoice can only have status "open" or "betaald"
             throw new BadRequestException();
         }
         storedInvoice.setInvoiceStatus(updateInvoice.getInvoiceStatus());
@@ -163,7 +160,7 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
 
 
             if (storedServiceInvoice.getVatRate() == 0.00f) {
-                storedServiceInvoice.setVatRate(storedServiceLine.getVatRate());                                                            //get vatRate at first cycle, VAT rate is for all items (parts and activities) the same
+                storedServiceInvoice.setVatRate(storedServiceLine.getVatRate());                                                            //get vatRate at first cycle, VAT rate is for all items (parts and activities) the same rate
             }
 
             storedServiceLine.setInvoice(storedServiceInvoice);                                                                             //Update the idInvoice In the ServiceLine
@@ -179,7 +176,7 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
         storedServiceInvoice.setInvoiceTotal(0.00f);                        //set invoiceTotal to zero, to ensure recalculation is correct in case of PUT request
 
         //Calculate invoiceTotal
-        BigDecimal invoiceTotalRounded = new BigDecimal(storedServiceInvoice.getInvoiceSubtotal() + storedServiceInvoice.getVatAmount());       //Get the vatAmount per serviceLine and make it BigDecimal
+        BigDecimal invoiceTotalRounded = new BigDecimal(storedServiceInvoice.getInvoiceSubtotal() + storedServiceInvoice.getVatAmount());       //Invoice Total = invoice Subtotal and vatAmount
         storedServiceInvoice.setInvoiceTotal(invoiceTotalRounded.setScale(2, RoundingMode.HALF_EVEN).floatValue());
 
         return invoiceRepository.save(invoice);
@@ -193,9 +190,7 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
         Service storedService = serviceRepository.findById(storedServiceId);
 
         try {
-
-
-           // String path has to be defined in Json;
+            //String path has to be defined in Json;
             File invoiceFile = new File(invoice.getPathName());
             FileWriter invoicePrintLine = new FileWriter(invoiceFile);
 

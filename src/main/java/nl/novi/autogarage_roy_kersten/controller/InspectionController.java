@@ -1,6 +1,7 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Inspection;
+import nl.novi.autogarage_roy_kersten.model.ServiceStatus;
 import nl.novi.autogarage_roy_kersten.service.InspectionService;
 import nl.novi.autogarage_roy_kersten.service.InspectionServiceImpl;
 import nl.novi.autogarage_roy_kersten.service.ServiceServiceImpl;
@@ -51,7 +52,7 @@ public class InspectionController extends ServiceController {
 
     //Get inspections by serviceStatus "niet uitvoeren"
     @GetMapping(value = "/calllist")
-    public ResponseEntity<Object> getInspectionByStatus(String serviceStatus) {
+    public ResponseEntity<Object> getInspectionByStatus(ServiceStatus serviceStatus) {
         return ResponseEntity.ok(inspectionService.getInspectionByStatus(serviceStatus));
     }
 

@@ -1,6 +1,7 @@
 package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Repair;
+import nl.novi.autogarage_roy_kersten.model.ServiceStatus;
 import nl.novi.autogarage_roy_kersten.service.RepairService;
 import nl.novi.autogarage_roy_kersten.service.RepairServiceImpl;
 import nl.novi.autogarage_roy_kersten.service.ServiceService;
@@ -56,7 +57,7 @@ public class RepairController extends ServiceController {
 
     //Get repairs by serviceStatus "voltooid"
     @GetMapping(value = "/calllist")
-    public ResponseEntity<Object> getRepairByStatus(String serviceStatus) {
+    public ResponseEntity<Object> getRepairByStatus(ServiceStatus serviceStatus) {
         return ResponseEntity.ok(repairService.getRepairByStatus(serviceStatus));
     }
 
