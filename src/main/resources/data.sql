@@ -1,3 +1,18 @@
+
+INSERT INTO users (username, password, enabled) VALUES ('mechanic', '$2a$10$wPHxwfsfTnOJAdgYcerBt.utdAvC24B/DWfuXfzKBSDHO0etB1ica', TRUE);
+INSERT INTO users (username, password, enabled) VALUES ('admin_clerk', '$2a$10$wPHxwfsfTnOJAdgYcerBt.utdAvC24B/DWfuXfzKBSDHO0etB1ica', TRUE);
+INSERT INTO users (username, password, enabled) VALUES ('cashier', '$2a$10$wPHxwfsfTnOJAdgYcerBt.utdAvC24B/DWfuXfzKBSDHO0etB1ica', TRUE);
+INSERT INTO users (username, password, enabled) VALUES ('backoffice', '$2a$10$wPHxwfsfTnOJAdgYcerBt.utdAvC24B/DWfuXfzKBSDHO0etB1ica', TRUE);
+INSERT INTO users (username, password, enabled) VALUES ('admin', '$2a$10$wPHxwfsfTnOJAdgYcerBt.utdAvC24B/DWfuXfzKBSDHO0etB1ica', TRUE);
+
+INSERT INTO authorities (username, authority) VALUES ('admin_clerk', 'ROLE_ADMIN_CLERK');
+INSERT INTO authorities (username, authority) VALUES ('cashier', 'ROLE_CASHIER');
+INSERT INTO authorities (username, authority) VALUES ('backoffice', 'ROLE_BACKOFFICE');
+INSERT INTO authorities (username, authority) VALUES ('mechanic', 'ROLE_MECHANIC');
+INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_ADMIN');
+
+
+
 INSERT INTO customer (first_name, last_name, phone_number, email)
 VALUES
 ('Tom', 'de Graaf', '+31612345678', 'tom.degraaf@gmail.com'),
@@ -12,11 +27,12 @@ VALUES
 
 INSERT INTO item (item_type, item_name, qty, price, brand, item_category)
 VALUES
+('activity','keuring auto', '1', 45.00,'' ,'keuring'),
+('activity','overige handelingen', '1',0.00 ,'' ,'overige activiteit'),
 ('part','zomerband 205/55/R16', '5', 55.00, 'Goodyear', 'banden'),
 ('part','winterband 205/55/R16', '1', 60.00, 'Goodyear', 'banden'),
 ('part','remschijven voor', '1', 129.99, 'Bosch', 'remmen'),
-('part','remschijven achter', '1', 149.99, 'Bosch', 'remmen'),
-('activity','keuring auto', '1', 45.00, '','keuring');
+('part','remschijven achter', '1', 149.99, 'Bosch', 'remmen');
 
 
 INSERT INTO service (service_type, service_date, service_status, issues_found_inspection, issues_to_repair,customer_id_customer, car_id_car)

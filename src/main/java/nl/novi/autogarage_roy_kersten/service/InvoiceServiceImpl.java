@@ -184,10 +184,19 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
 
 
     public void printInvoice(Invoice invoice) {
+        String invoiceType="";
         Invoice storedServiceInvoice = invoiceRepository.save(invoice);
 
         long storedServiceId = storedServiceInvoice.getService().getIdService();
         Service storedService = serviceRepository.findById(storedServiceId);
+
+        //Determine which type of invoice is generated "Inspection" or "Repair"
+        String subClassName = storedService.getClass().getSimpleName();
+        if (subClassName.equalsIgnoreCase("Inspection")) {
+           invoiceType = "KEURING";
+        }  else if (subClassName.equalsIgnoreCase("Repair")) {
+           invoiceType = "REPARATIE";
+        }
 
         try {
             //String path has to be defined in Json;
@@ -198,7 +207,7 @@ public abstract class InvoiceServiceImpl implements InvoiceService {
 
             invoicePrintLine.write("\n");
 
-            invoicePrintLine.write(String.format("%-10s \r\n", "\tFACTUUR"));
+            invoicePrintLine.write(String.format("%-10s \r\n", "\tFACTUUR: "+ invoiceType));
 
             invoicePrintLine.write("\n");
 

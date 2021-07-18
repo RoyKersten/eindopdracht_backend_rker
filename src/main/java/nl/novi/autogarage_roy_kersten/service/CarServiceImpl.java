@@ -64,6 +64,7 @@ public class CarServiceImpl implements CarService{
             throw new BadRequestException();
         }
         carRepository.deleteById(idCar);
+
     }
 
 
