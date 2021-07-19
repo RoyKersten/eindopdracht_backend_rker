@@ -29,8 +29,6 @@ public class ServiceLineServiceImpl implements ServiceLineService {
     //Create a new ServiceLine
     @Override
     public long addServiceLine(ServiceLine serviceLine) {
-
-
         //if Qty < 1 no serviceLine should be created, throw BadRequestException
         if (serviceLine.getQty() < 1) {
             throw new BadRequestException("Qty mag niet kleiner zijn dan 1");
@@ -106,8 +104,6 @@ public class ServiceLineServiceImpl implements ServiceLineService {
         }
 
         reverseInventory(idServiceLine);
-
-
 
         //Check if inventory level is sufficient for selected item
         checkInventoryLevel(serviceLine);

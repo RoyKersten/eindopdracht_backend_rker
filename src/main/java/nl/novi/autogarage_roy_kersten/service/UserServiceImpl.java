@@ -17,6 +17,7 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService {
 
+    //Attributes
     @Autowired
     private UserRepository userRepository;
 
@@ -50,7 +51,7 @@ public class UserServiceImpl implements UserService {
         return newUser.getUsername();
     }
 
-    //delete a user
+    //delete a user by Id (username)
     @Override
     public void deleteUser(String username) {
         if (!userRepository.existsById(username)) {
@@ -71,6 +72,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    //Get Authorities by Id (username)
    @Override
     public Set<Authority> getAuthorities(String username) {
         if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
@@ -78,6 +80,7 @@ public class UserServiceImpl implements UserService {
         return user.getAuthorities();
     }
 
+    //add Authorities by Id (username)
     @Override
     public void addAuthority(String username, String authority) {
         if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
@@ -87,6 +90,7 @@ public class UserServiceImpl implements UserService {
         }
 
 
+    //remove authority by Id (username)
     @Override
     public void removeAuthority(String username, String authority) {
         if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
