@@ -4,19 +4,17 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Entity
 @DiscriminatorValue("inspection")
-
 public class Inspection extends Service {
 
-    //attributen
+    //attributes
     @Column(name = "issues_found_inspection")
     private String issuesFoundInspection;
 
-    //constructor
+    //constructors
     public Inspection () {}
 
     public Inspection(Long idService, ServiceStatus serviceStatus) {
@@ -29,8 +27,6 @@ public class Inspection extends Service {
     }
 
     //getters and setters
-
-
     public String getIssuesFoundInspection() {
         return issuesFoundInspection;
     }

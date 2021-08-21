@@ -8,17 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
- * The CustomerServiceImpl class implements the methods defined in the CustomerService Interface and is an intermediate
- * class between the CustomerController class and CustomerRepository class.
- * The CustomerServiceImpl class receives information from the CustomerController class, adds business logic and
- * communicates with / provides information for the CustomerRepository class.
- * <p>
- * In the CustomerServiceImpl class the business logic code is written.
- * Business Logic:
- */
+ * The CustomerServiceImpl class implements the methods defined in the CustomerService Interface.
+ * The CustomerServiceImpl class receives information via this interface from the CustomerController class, adds business logic and
+ * communicates with the CustomerRepository interface.
+ * */
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -26,9 +21,8 @@ public class CustomerServiceImpl implements CustomerService {
     //Attributes
     private CustomerRepository customerRepository;
 
-
-    @Autowired
     //Constructors
+    @Autowired
     public CustomerServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
@@ -52,33 +46,30 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer getCustomerById(long idCustomer) {
         if (!customerRepository.existsById(idCustomer)) {
-            throw new RecordNotFoundException();
+            throw new RecordNotFoundException("customer id does not exists");
         }
         return customerRepository.findById(idCustomer);
     }
 
-
     //Delete Customer by idCustomer
     @Override
     public void deleteCustomerById(long idCustomer) {
-
         if (!customerRepository.existsById(idCustomer)) {
-            throw new BadRequestException();
+            throw new BadRequestException("customer id does not exists");
         }
-        customerRepository.deleteById(idCustomer);
+        try {
+            customerRepository.deleteById(idCustomer);
+        } catch (Exception exception) {
+                throw new BadRequestException("customer cannot be deleted, most likely customer is used in earlier inspection and/or repair service");
+         }
     }
-
 
     //Update customer by idCustomer
     @Override
     public void updateCustomerById(long idCustomer, Customer updateCustomer) {
-
-
         if (!customerRepository.existsById(idCustomer)) {
-            throw new BadRequestException();
-
+            throw new BadRequestException("customer id does not exists");
         }
-
         Customer storedCustomer = customerRepository.findById(idCustomer);
         storedCustomer.setFirstName(updateCustomer.getFirstName());
         storedCustomer.setLastName(updateCustomer.getLastName());

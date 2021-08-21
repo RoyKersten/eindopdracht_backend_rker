@@ -1,13 +1,10 @@
 package nl.novi.autogarage_roy_kersten.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
-
 
 /**
  * The Customer class is the blueprint for all Customer objects.
@@ -16,7 +13,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "customer")
-
 public class Customer {
 
 
@@ -43,16 +39,12 @@ public class Customer {
 
     @OneToMany (mappedBy = "customer")
     @JsonIgnore
-    private List<InspectionInvoice> inspectionInvoice;
-
-    @OneToMany (mappedBy = "customer")
-    @JsonIgnore
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Car> car;
 
     @OneToMany (mappedBy = "customer")
     @JsonIgnore
     private List<Service> service;
-
 
     //Constructors
     public Customer() {

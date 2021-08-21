@@ -1,7 +1,8 @@
 package nl.novi.autogarage_roy_kersten.service;
 
-import nl.novi.autogarage_roy_kersten.model.Customer;
+import nl.novi.autogarage_roy_kersten.model.ItemStatus;
 import nl.novi.autogarage_roy_kersten.model.Part;
+import nl.novi.autogarage_roy_kersten.repository.ItemRepository;
 import nl.novi.autogarage_roy_kersten.repository.PartRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PartServiceTest extends ItemServiceTest {
+public class PartServiceTest {
+
+    @Mock
+    ItemRepository itemRepository;
 
     @Mock
     PartRepository partRepository;
@@ -32,10 +36,9 @@ public class PartServiceTest extends ItemServiceTest {
 
     //Method is inherit from Item but needs to contain characteristics of a Part
     @Test
-    @Override
     void addItemTest() {
         //Arrange => create Item as input for test
-        Part storedItem = new Part (1L,"zomerband 205/55/R16", 1, 55.0f,"Goodyear", "banden");
+        Part storedItem = new Part (1L,"zomerband 205/55/R16", 1, 55.0f,"Goodyear", "banden", ItemStatus.LOCKED);
         when(itemRepository.save(storedItem)).thenReturn(storedItem);                                                   //itemRepository because of inheritance
 
         //Act => call method addItem
@@ -51,15 +54,15 @@ public class PartServiceTest extends ItemServiceTest {
         assertThat(validatePart.getPrice()).isEqualTo(55.00f);
         assertThat(validatePart.getBrand()).isEqualTo("Goodyear");
         assertThat(validatePart.getItemCategory()).isEqualTo("banden");
+        assertThat(validatePart.getStatus()).isEqualTo(ItemStatus.LOCKED);
 
     }
 
     //Method is inherit from Item but needs to contain characteristics of a Part
     @Test
-    @Override
-    void getItemById() {
+    void getItemByIdTest() {
         //Arrange => create Item object as input for test
-        Part storedItem = new Part (1L,"zomerband 205/55/R16", 1, 55.0f,"Goodyear", "banden");
+        Part storedItem = new Part (1L,"zomerband 205/55/R16", 1, 55.0f,"Goodyear", "banden",ItemStatus.LOCKED);
         when(itemRepository.existsById(1L)).thenReturn(true);
         when(itemRepository.findById(1L)).thenReturn(storedItem);
 
@@ -73,12 +76,12 @@ public class PartServiceTest extends ItemServiceTest {
         assertThat(validatePart.getPrice()).isEqualTo(55.00f);
         assertThat(validatePart.getBrand()).isEqualTo("Goodyear");                                                      //Brand is specific for Part object not for Activity
         assertThat(validatePart.getItemCategory()).isEqualTo("banden");
+        assertThat(validatePart.getStatus()).isEqualTo(ItemStatus.LOCKED);
     }
 
     //Method is inherit from Item but needs to contain characteristics of a Part
     @Test
-    @Override
-    void deleteItemById() {
+    void deleteItemByIdTest() {
         //Arrange => check if idItem exists and return boolean true to pass BadRequestException check
         when(itemRepository.existsById(1L)).thenReturn(true);                                                            //itemRepository because of inheritance
 
@@ -91,10 +94,10 @@ public class PartServiceTest extends ItemServiceTest {
 
     //Method is defined as Part
     @Test
-    void getAllParts() {
-        Part part1 = new Part (1L,"zomerband 205/55/R16", 1, 55.0f,"Goodyear", "banden");
-        Part part2 = new Part (2L,"winterbandband 200/55/R16", 2, 145.0f,"Vredestein", "banden");
-        Part part3 = new Part (3L,"remschijf achter", 1, 199.0f,"Bosch", "remmen");
+    void getAllPartsTest() {
+        Part part1 = new Part(1L, "zomerband 205/55/R16", 1, 55.0f, "Goodyear", "banden", ItemStatus.LOCKED);
+        Part part2 = new Part(2L, "winterbandband 200/55/R16", 2, 145.0f, "Vredestein", "banden", ItemStatus.LOCKED);
+        Part part3 = new Part(3L, "remschijf achter", 1, 199.0f, "Bosch", "remmen", ItemStatus.LOCKED);
 
         List<Part> parts = new ArrayList<>();
         parts.add(part1);
@@ -115,14 +118,15 @@ public class PartServiceTest extends ItemServiceTest {
         assertThat(validateParts.get(0).getPrice()).isEqualTo(55.00f);
         assertThat(validateParts.get(0).getBrand()).isEqualTo("Goodyear");                                              //Brand is specific for Part object not for Activity
         assertThat(validateParts.get(0).getItemCategory()).isEqualTo("banden");
+        assertThat(validateParts.get(0).getStatus()).isEqualTo(ItemStatus.LOCKED);
     }
 
     //Method is defined as Part
     @Test
-    void updatePartById() {
+    void updatePartByIdTest() {
         //Arrange => create updatePart and storedPart object as input for test
-        Part updatePart = new Part (1L,"zomerband 205/55/R16", 1, 55.0f,"Goodyear", "banden");
-        Part storedPart = new Part (1L,"winterbandband 200/55/R16", 2, 145.0f,"Vredestein", "banden");
+        Part updatePart = new Part (1L,"zomerband 205/55/R16", 1, 55.0f,"Goodyear", "banden",ItemStatus.LOCKED);
+        Part storedPart = new Part (1L,"winterbandband 200/55/R16", 2, 145.0f,"Vredestein", "banden",ItemStatus.LOCKED);
 
         when(partRepository.existsById(1L)).thenReturn(true);
         when(partRepository.findById(1L)).thenReturn(storedPart);
@@ -137,6 +141,7 @@ public class PartServiceTest extends ItemServiceTest {
         assertThat(storedPart.getPrice()).isEqualTo(55.00f);
         assertThat(storedPart.getBrand()).isEqualTo("Goodyear");                                                      //Brand is specific for Part object not for Activity
         assertThat(storedPart.getItemCategory()).isEqualTo("banden");
+        assertThat(storedPart.getStatus()).isEqualTo(ItemStatus.LOCKED);
     }
 
 }

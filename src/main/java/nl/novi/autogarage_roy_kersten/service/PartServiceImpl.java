@@ -10,21 +10,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * The PartServiceImpl class implements the methods defined in the PartService Interface and is an intermediate
- * class between the PartController class and PartRepository class.
- * The PartServiceImpl class receives information from the PartController class, adds business logic and
- * communicates with / provides information for the PartRepository class.
- * <p>
- * In the PartServiceImpl class the business logic code is written.
- * Business Logic:
- */
+ * The PartServiceImpl class implements the methods defined in the PartService Interface.
+ * The PartServiceImpl class receives information via this interface from the PartController class, adds business logic and
+ * communicates with the PartRepository interface.
+ * */
 
 @Service
 public class PartServiceImpl extends ItemServiceImpl implements PartService {
 
     //Attributes
     private PartRepository partRepository;
-
 
     @Autowired
     //Constructors
@@ -43,10 +38,8 @@ public class PartServiceImpl extends ItemServiceImpl implements PartService {
     //Update Part by idItem
     @Override
     public void updatePartById(long idItem, Part updateItem) {
-
         if (!partRepository.existsById(idItem)) {
-            throw new BadRequestException();
-
+            throw new BadRequestException("item id does not exists");
         }
         Part storedItem = partRepository.findById(idItem);
         storedItem.setItemName(updateItem.getItemName());

@@ -1,7 +1,11 @@
 package nl.novi.autogarage_roy_kersten.service;
 
-import nl.novi.autogarage_roy_kersten.model.*;
+import nl.novi.autogarage_roy_kersten.model.Car;
+import nl.novi.autogarage_roy_kersten.model.Customer;
+import nl.novi.autogarage_roy_kersten.model.Inspection;
+import nl.novi.autogarage_roy_kersten.model.ServiceStatus;
 import nl.novi.autogarage_roy_kersten.repository.InspectionRepository;
+import nl.novi.autogarage_roy_kersten.repository.ServiceRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -18,7 +22,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class InspectionServiceTest extends ServiceServiceTest {
+public class InspectionServiceTest {
+
+    @Mock
+    ServiceRepository serviceRepository;
 
     @Mock
     InspectionRepository inspectionRepository;
@@ -32,7 +39,7 @@ public class InspectionServiceTest extends ServiceServiceTest {
 
     //Method is inherit from Service
     @Test
-    void addService() {
+    void addServiceTest() {
         //Arrange => create Repair as input for test
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         Car car = new Car(1L, "volkswagen", "polo", "2021", "58-AAA-53");
@@ -58,7 +65,7 @@ public class InspectionServiceTest extends ServiceServiceTest {
 
     //Method is inherit from Service
     @Test
-    void getServiceById() {
+    void getServiceByIdTest() {
         //Arrange => create repair object as input for test
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         Car car = new Car(1L, "volkswagen", "polo", "2021", "58-AAA-53");
@@ -82,7 +89,7 @@ public class InspectionServiceTest extends ServiceServiceTest {
 
     //Method is inherit from Service
     @Test
-    void deleteServiceById() {
+    void deleteServiceByIdTest() {
         //Arrange => check if idRepair exists and return boolean true to pass BadRequestException check
         when(serviceRepository.existsById(1L)).thenReturn(true);
 
@@ -95,7 +102,7 @@ public class InspectionServiceTest extends ServiceServiceTest {
 
     //Method is inherit from Service
     @Test
-    void updateServiceStatusById() {
+    void updateServiceStatusByIdTest() {
         //Arrange => create repair object as input for test
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         Car car = new Car(1L, "volkswagen", "polo", "2021", "58-AAA-53");
@@ -117,7 +124,7 @@ public class InspectionServiceTest extends ServiceServiceTest {
     }
 
     @Test
-    void getAllInspections() {
+    void getAllInspectionsTest() {
         //Arrange => create 3 repairs as input for the test
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         Car car = new Car(1L, "volkswagen", "polo", "2021", "58-AAA-53");
@@ -147,7 +154,7 @@ public class InspectionServiceTest extends ServiceServiceTest {
     }
 
     @Test
-    void getInspectionByStatus() {
+    void getInspectionByStatusTest() {
         //Arrange => create objects as input for test (test should return all repairs with status "VOLTOOID")
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         Car car = new Car(1L, "volkswagen", "polo", "2021", "58-AAA-53");
@@ -171,7 +178,7 @@ public class InspectionServiceTest extends ServiceServiceTest {
     }
 
     @Test
-    void updateInspectionById() {
+    void updateInspectionByIdTest() {
         //Arrange => create updateInspection and storedInspection object as input for test
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         Car car = new Car(1L, "volkswagen", "polo", "2021", "58-AAA-53");
@@ -193,9 +200,5 @@ public class InspectionServiceTest extends ServiceServiceTest {
         assertThat(storedInspection.getServiceLine()).isEqualTo(null);
         assertThat(storedInspection.getCar()).isEqualTo(car);
     }
-
-
-
-
 
 }

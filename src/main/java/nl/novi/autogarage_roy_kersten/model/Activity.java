@@ -7,15 +7,11 @@ import javax.persistence.Entity;
 @DiscriminatorValue("activity")
 public class Activity extends Item {
 
-    //Attributes
-
     //Constructors
     public Activity() {}
 
-    public Activity(Long idItem, String itemName, int qty, float price, String itemCategory) {
-        super(idItem, itemName, qty, price, itemCategory);
+    public Activity(Long idItem, String itemName, int qty, float price, String itemCategory,ItemStatus status) {
+        super(idItem, itemName, qty, price,itemCategory,status);
     }
-
-    //Methods
 
 }

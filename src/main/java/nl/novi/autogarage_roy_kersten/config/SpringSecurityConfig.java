@@ -74,12 +74,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/services/inspections/**").hasAnyRole("ADMIN_CLERK","MECHANIC","BACKOFFICE","CASHIER")
                 .antMatchers(HttpMethod.PUT, "/services/inspections/**").hasAnyRole("ADMIN_CLERK","MECHANIC")
                 .antMatchers(HttpMethod.POST, "/services/inspections/**").hasAnyRole("ADMIN_CLERK", "MECHANIC")
+                .antMatchers(HttpMethod.PATCH, "/services/inspections/**").hasAnyRole("MECHANIC")
                 .antMatchers(HttpMethod.DELETE, "/services/inspections/**").hasAnyRole("ADMIN_CLERK","MECHANIC")
 
                  //Set authorization roles for endpoint /services/repairs/
                 .antMatchers(HttpMethod.GET, "/services/repairs/**").hasAnyRole("ADMIN_CLERK","MECHANIC","BACKOFFICE","CASHIER")
                 .antMatchers(HttpMethod.PUT, "/services/repairs/**").hasAnyRole("MECHANIC")
                 .antMatchers(HttpMethod.POST, "/services/repairs/**").hasAnyRole("MECHANIC")
+                .antMatchers(HttpMethod.PATCH, "/services/repairs/**").hasAnyRole("MECHANIC")
                 .antMatchers(HttpMethod.DELETE, "/services/repairs/**").hasAnyRole("MECHANIC")
 
                  //Set authorization roles for endpoint /servicelines/
@@ -104,16 +106,25 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/invoices/inspections/**").hasAnyRole("ADMIN_CLERK","MECHANIC","BACKOFFICE","CASHIER")
                 .antMatchers(HttpMethod.PUT, "/invoices/inspections/**").hasAnyRole("MECHANIC", "CASHIER")
                 .antMatchers(HttpMethod.POST, "/invoices/inspections/**").hasAnyRole("MECHANIC","CASHIER")
+                .antMatchers(HttpMethod.PATCH, "/invoices/inspections/**").hasAnyRole("CASHIER")
                 .antMatchers(HttpMethod.DELETE, "/invoices/inspections/**").hasAnyRole("MECHANIC", "CASHIER")
 
                  //Set authorization roles for endpoint /invoices/repairs/
                 .antMatchers(HttpMethod.GET, "/invoices/repairs/**").hasAnyRole("ADMIN_CLERK","MECHANIC","BACKOFFICE","CASHIER")
                 .antMatchers(HttpMethod.PUT, "/invoices/repairs/**").hasAnyRole("CASHIER")
                 .antMatchers(HttpMethod.POST, "/invoices/repairs/**").hasAnyRole("CASHIER")
+                .antMatchers(HttpMethod.PATCH, "/invoices/repairs/**").hasAnyRole("CASHIER")
                 .antMatchers(HttpMethod.DELETE, "/invoices/repairs/**").hasAnyRole("CASHIER")
 
                  //Set authorization roles for endpoint /users/
-                .antMatchers("/users/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/users/mechanic").hasAnyRole("MECHANIC")
+                .antMatchers(HttpMethod.PUT, "/users/cashier").hasAnyRole("CASHIER")
+                .antMatchers(HttpMethod.PUT, "/users/admin_clerk").hasAnyRole("ADMIN_CLERK")
+                .antMatchers(HttpMethod.PUT, "/users/backoffice").hasAnyRole("BACKOFFICE")
+                .antMatchers(HttpMethod.GET, "/users/**").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/users/**").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/users/**").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("ADMIN")
 
                  //Endpoints related to JWT token
                 .antMatchers("/authenticated").authenticated()
@@ -129,8 +140,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
-
     }
-
 
 }

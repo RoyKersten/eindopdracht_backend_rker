@@ -5,25 +5,22 @@ import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)                   //Set Strategy SINGLE_TABLE => Create one table for all subclasses with a subclass type column to differentiate between subclasses
-@DiscriminatorColumn(name = "service_type")                             //Table generation
+@DiscriminatorColumn(name = "service_type")                             //Table subclasses can be identified in the table by service_type
 @Table(name = "service")                                                //Table generation
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Inspection.class, name = "inspection"),
-
         @JsonSubTypes.Type(value = Repair.class, name = "repair") }
 )
 
 public abstract class Service {
 
-    //attributen
+    //Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idService;
@@ -41,14 +38,14 @@ public abstract class Service {
     private List<ServiceLine> serviceLine;
 
     @ManyToOne
-    @Cascade(org.hibernate.annotations.CascadeType.MERGE)    // 	In this cascade operation, if the parent entity is merged then all its related entity will also be merged.
+    @JsonIncludeProperties("idCustomer")
     private Customer customer;
 
     @ManyToOne
-    @Cascade(org.hibernate.annotations.CascadeType.MERGE)    // 	In this cascade operation, if the parent entity is merged then all its related entity will also be merged.
+    @JsonIncludeProperties("idCar")
     private Car car;
 
-     //constructor
+    //constructors
     public Service() {}
 
     public Service(Long idService, ServiceStatus serviceStatus){

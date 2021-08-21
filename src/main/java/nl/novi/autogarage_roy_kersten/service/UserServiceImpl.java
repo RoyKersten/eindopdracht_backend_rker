@@ -36,6 +36,9 @@ public class UserServiceImpl implements UserService {
     //get user by username
     @Override
     public Optional<User> getUser(String username) {
+        if(!userRepository.existsById(username)) {
+            throw new UsernameNotFoundException(username);
+        }
         return userRepository.findById(username);
     }
 
@@ -57,7 +60,6 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.existsById(username)) {
             throw new BadRequestException();
         }
-
         userRepository.deleteById(username);
     }
 
@@ -73,7 +75,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //Get Authorities by Id (username)
-   @Override
+    @Override
     public Set<Authority> getAuthorities(String username) {
         if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
         User user = userRepository.findById(username).get();

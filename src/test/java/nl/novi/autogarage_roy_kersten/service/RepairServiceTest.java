@@ -1,8 +1,11 @@
 package nl.novi.autogarage_roy_kersten.service;
 
-import nl.novi.autogarage_roy_kersten.model.*;
-import nl.novi.autogarage_roy_kersten.repository.ActivityRepository;
+import nl.novi.autogarage_roy_kersten.model.Car;
+import nl.novi.autogarage_roy_kersten.model.Customer;
+import nl.novi.autogarage_roy_kersten.model.Repair;
+import nl.novi.autogarage_roy_kersten.model.ServiceStatus;
 import nl.novi.autogarage_roy_kersten.repository.RepairRepository;
+import nl.novi.autogarage_roy_kersten.repository.ServiceRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -13,15 +16,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.LOCAL_DATE;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class RepairServiceTest extends ServiceServiceTest {
+public class RepairServiceTest {
+
+    @Mock
+    ServiceRepository serviceRepository;
 
     @Mock
     RepairRepository repairRepository;
@@ -35,8 +39,7 @@ public class RepairServiceTest extends ServiceServiceTest {
 
     //Method is inherit from Service
     @Test
-    @Override
-    void addService() {
+    void addServiceTest() {
         //Arrange => create Repair as input for test
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         Car car = new Car(1L, "volkswagen", "polo", "2021", "58-AAA-53");
@@ -58,13 +61,11 @@ public class RepairServiceTest extends ServiceServiceTest {
         assertThat(validateRepair.getIssuesToRepair()).isEqualTo("uitlaat vervangen");
         assertThat(validateRepair.getServiceLine()).isEqualTo(null);
         assertThat(validateRepair.getCar()).isEqualTo(car);
-
     }
 
     //Method is inherit from Service
     @Test
-    @Override
-    void getServiceById() {
+    void getServiceByIdTest() {
         //Arrange => create repair object as input for test
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         Car car = new Car(1L, "volkswagen", "polo", "2021", "58-AAA-53");
@@ -89,8 +90,7 @@ public class RepairServiceTest extends ServiceServiceTest {
 
     //Method is inherit from Service
     @Test
-    @Override
-    void deleteServiceById() {
+    void deleteServiceByIdTest() {
         //Arrange => check if idRepair exists and return boolean true to pass BadRequestException check
         when(serviceRepository.existsById(1L)).thenReturn(true);
 
@@ -103,8 +103,7 @@ public class RepairServiceTest extends ServiceServiceTest {
 
     //Method is inherit from Service
     @Test
-    @Override
-    void updateServiceStatusById() {
+    void updateServiceStatusByIdTest() {
         //Arrange => create repair object as input for test
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         Car car = new Car(1L, "volkswagen", "polo", "2021", "58-AAA-53");
@@ -127,7 +126,7 @@ public class RepairServiceTest extends ServiceServiceTest {
 
 
     @Test
-    void getAllRepairs() {
+    void getAllRepairsTest() {
         //Arrange => create 3 repairs as input for the test
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         Car car = new Car(1L, "volkswagen", "polo", "2021", "58-AAA-53");
@@ -143,7 +142,6 @@ public class RepairServiceTest extends ServiceServiceTest {
 
         when(repairRepository.findAll()).thenReturn(repairs);
 
-
         //Act => call method getAllRepairs
         List<Repair> validateRepairs = repairService.getAllRepairs();
 
@@ -158,7 +156,7 @@ public class RepairServiceTest extends ServiceServiceTest {
     }
 
     @Test
-    void getRepairByStatus() {
+    void getRepairByStatusTest() {
         //Arrange => create objects as input for test (test should return all repairs with status "VOLTOOID")
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         Car car = new Car(1L, "volkswagen", "polo", "2021", "58-AAA-53");
@@ -179,11 +177,10 @@ public class RepairServiceTest extends ServiceServiceTest {
         verify(repairRepository,times(1)).findByServiceStatus(ServiceStatus.VOLTOOID);
         assertThat(validateRepairs.get(0).getServiceStatus()).isEqualTo(ServiceStatus.VOLTOOID);
         assertThat(validateRepairs.get(1).getServiceStatus()).isNotEqualTo(ServiceStatus.VOLTOOID);                     //Status is not equal
-
     }
 
     @Test
-    void updateRepairById() {
+    void updateRepairByIdTest() {
         //Arrange => create updateRepair and storedRepair object as input for test
         Customer customer = new Customer(1L, "Karel", "Hoekstra", "+31612345678", "karel.hoekstra@mail.com");
         Car car = new Car(1L, "volkswagen", "polo", "2021", "58-AAA-53");
@@ -205,6 +202,4 @@ public class RepairServiceTest extends ServiceServiceTest {
         assertThat(storedRepair.getServiceLine()).isEqualTo(null);
         assertThat(storedRepair.getCar()).isEqualTo(car);
     }
-
-
 }

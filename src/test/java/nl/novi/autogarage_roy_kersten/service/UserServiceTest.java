@@ -56,6 +56,7 @@ public class UserServiceTest {
     void getUserTest() {
         //Arrange => create mock user object as input for test
         User user = new User("karel","password1",true);
+        when(userRepository.existsById("karel")).thenReturn(true);
         when(userRepository.findById("karel")).thenReturn(Optional.of(user));
 
         //Act => call method getUser
@@ -72,6 +73,7 @@ public class UserServiceTest {
         //Arrange => create mock user object as input for test
         User user = new User("karel","password1",true);
         when(userRepository.save(user)).thenReturn(user);
+
 
         //Act call method createUser
         userService.createUser(user);

@@ -8,6 +8,7 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
 
+    //Attributes
     @Id
     @Column (nullable = false, unique = true)
     private String username;
@@ -17,6 +18,14 @@ public class User {
 
     @Column(nullable = false)
     private boolean enabled;
+
+    @OneToMany(
+            targetEntity = Authority.class,
+            mappedBy = "username",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
+    private Set<Authority> authorities = new HashSet<>();
 
     //Constructors
     public User() {
@@ -35,13 +44,6 @@ public class User {
         this.authorities = authorities;
     }
 
-    @OneToMany(
-            targetEntity = Authority.class,
-            mappedBy = "username",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER)
-    private Set<Authority> authorities = new HashSet<>();
 
     //Getters and Setters related to User
     public String getUsername() {
@@ -67,6 +69,7 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
 
     //Getters and Setters related to Authority
     public Set<Authority> getAuthorities() { return authorities; }

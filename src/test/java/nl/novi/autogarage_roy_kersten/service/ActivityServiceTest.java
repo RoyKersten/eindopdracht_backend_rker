@@ -1,7 +1,9 @@
 package nl.novi.autogarage_roy_kersten.service;
 
 import nl.novi.autogarage_roy_kersten.model.Activity;
+import nl.novi.autogarage_roy_kersten.model.ItemStatus;
 import nl.novi.autogarage_roy_kersten.repository.ActivityRepository;
+import nl.novi.autogarage_roy_kersten.repository.ItemRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -17,8 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ActivityServiceTest extends ItemServiceTest {
+public class ActivityServiceTest {
 
+    @Mock
+    ItemRepository itemRepository;
 
     @Mock
     ActivityRepository activityRepository;
@@ -31,10 +35,9 @@ public class ActivityServiceTest extends ItemServiceTest {
 
     //Method is inherit from Item but needs to contain characteristics of an Activity;
     @Test
-    @Override
     void addItemTest() {
         //Arrange => create Item as input for test
-        Activity storedItem = new Activity(1L, "keuring auto", 1, 45.00f, "keuring");
+        Activity storedItem = new Activity(1L, "keuring auto", 1, 45.00f, "keuring", ItemStatus.LOCKED);
         when(itemRepository.save(storedItem)).thenReturn(storedItem);
 
         //Act => call method addItem
@@ -49,14 +52,14 @@ public class ActivityServiceTest extends ItemServiceTest {
         assertThat(validateActivity.getQty()).isEqualTo(1);
         assertThat(validateActivity.getPrice()).isEqualTo(45.00f);
         assertThat(validateActivity.getItemCategory()).isEqualTo("keuring");
+        assertThat(validateActivity.getStatus()).isEqualTo(ItemStatus.LOCKED);
     }
 
     //Method is inherit from Item but needs to contain characteristics of an Activity;
     @Test
-    @Override
-    void getItemById() {
+    void getItemByIdTest() {
         //Arrange => create Item object as input for test
-        Activity storedItem = new Activity(1L, "keuring auto", 1, 45.00f, "keuring");
+        Activity storedItem = new Activity(1L, "keuring auto", 1, 45.00f, "keuring",ItemStatus.LOCKED);
         when(itemRepository.existsById(1L)).thenReturn(true);
         when(itemRepository.findById(1L)).thenReturn(storedItem);
 
@@ -69,12 +72,12 @@ public class ActivityServiceTest extends ItemServiceTest {
         assertThat(validateActivity.getQty()).isEqualTo(1);
         assertThat(validateActivity.getPrice()).isEqualTo(45.00f);
         assertThat(validateActivity.getItemCategory()).isEqualTo("keuring");
+        assertThat(validateActivity.getStatus()).isEqualTo(ItemStatus.LOCKED);
     }
 
     //Method is inherit from Item but needs to contain characteristics of an Activity;
     @Test
-    @Override
-    void deleteItemById() {
+    void deleteItemByIdTest() {
         //Arrange => check if idItem exists and return boolean true to pass BadRequestException check
         when(itemRepository.existsById(1L)).thenReturn(true);
 
@@ -87,10 +90,10 @@ public class ActivityServiceTest extends ItemServiceTest {
 
     //Method is defined as Activity
     @Test
-    void getAllActivities() {
-        Activity activity1 = new Activity(1L, "keuring auto", 1, 45.00f, "keuring");
-        Activity activity2 = new Activity(2L, "vervangen remmen", 2, 145.00f, "remmen");
-        Activity activity3 = new Activity(3L, "verversen olie longlife", 1, 40.00f, "algemeen");
+    void getAllActivitiesTest() {
+        Activity activity1 = new Activity(1L, "keuring auto", 1, 45.00f, "keuring",ItemStatus.LOCKED);
+        Activity activity2 = new Activity(2L, "vervangen remmen", 2, 145.00f, "remmen",ItemStatus.LOCKED);
+        Activity activity3 = new Activity(3L, "verversen olie longlife", 1, 40.00f, "algemeen",ItemStatus.LOCKED);
 
         List<Activity> activities = new ArrayList<>();
         activities.add(activity1);
@@ -110,14 +113,15 @@ public class ActivityServiceTest extends ItemServiceTest {
         assertThat(validateActivity.get(0).getQty()).isEqualTo(1);
         assertThat(validateActivity.get(0).getPrice()).isEqualTo(45.00f);
         assertThat(validateActivity.get(0).getItemCategory()).isEqualTo("keuring");
+        assertThat(validateActivity.get(0).getStatus()).isEqualTo(ItemStatus.LOCKED);
     }
 
     //Method is defined as Activity
     @Test
-    void updateActivityById() {
+    void updateActivityByIdTest() {
         //Arrange => create updateActivity and storedActivity object as input for test
-        Activity updateActivity = new Activity(1L, "keuring auto", 1, 45.00f, "keuring");
-        Activity storedActivity = new Activity(1L, "vervangen remmen", 2, 145.00f, "remmen");
+        Activity updateActivity = new Activity(1L, "keuring auto", 1, 45.00f, "keuring",ItemStatus.LOCKED);
+        Activity storedActivity = new Activity(1L, "vervangen remmen", 2, 145.00f, "remmen",ItemStatus.LOCKED);
 
         when(activityRepository.existsById(1L)).thenReturn(true);
         when(activityRepository.findById(1L)).thenReturn(storedActivity);
@@ -131,6 +135,7 @@ public class ActivityServiceTest extends ItemServiceTest {
         assertThat(storedActivity.getQty()).isEqualTo(1);
         assertThat(storedActivity.getPrice()).isEqualTo(45.00f);
         assertThat(storedActivity.getItemCategory()).isEqualTo("keuring");
+        assertThat(storedActivity.getStatus()).isEqualTo(ItemStatus.LOCKED);
     }
 
 }

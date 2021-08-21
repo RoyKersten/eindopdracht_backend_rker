@@ -10,48 +10,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 /**
- * The CustomerController class ensures that HTTP Requests en Responses are handled and processed further to the CustomerService class.
- * <p>
- * GET request is for all customers possible or by idCustomer.
- * GET all customers use path: "/customers"
- * GET customer by Id use path: "/customers/{idCustomer}"
- * <p>
- * POST request creates/adds a new Customer, prerequisite is that JSON has to be equal to the Customer definition in the Customer class.
- * a new idCustomer will be generated automatically, the next sequence number will be taken.
- * POST (add new customer) use path: "/customers"
- * <p>
- * DELETE request will delete an existing customer, the DELETE request must be executed by idCustomer.
- * DELETE custmer use path: "/customers/{idCustomer}"
- * <p>
- * PUT request will update Customer data, the PUT request must be executed by idCustomer.
- * path: "/customers/{idCustomer}"
- * <p>
- * <p>
- * JSON with GET (get all customers and POST (add new customer)
- * localhost:8080/customers
- *  {
- *      "firstName": "Roy",
- *      "lastName": "Kersten",
- *      "phoneNumber": "0612345678",
- *      "email": "rkersten@gmail.nl"
- *  }
- * <p>
- *
- * JSON with GET (get by ID), PUT (update Customer) and DELETE (delete Customer) => idCustomer should be added in these cases !
- * localhost:8080/customers/1
- *  {
- *      "idCustomer": 1,
- *      "firstName": "Roy",
- *      "lastName": "Kersten",
- *      "phoneNumber": "0612345678",
- *      "email": "rkersten@gmail.nl"
- *  }
- */
-
+ * The CustomerController class ensures that HTTP Requests en Responses are handled and processed further to the CustomerService interface.
+**/
 
 @RestController
-@CrossOrigin
-@RequestMapping(value = "/customers")                               //End point "/customer"
+@RequestMapping(value = "/customers")
 public class CustomerController {
 
     //Attributes
@@ -80,7 +43,6 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.getAllCustomers());
     }
 
-
     //Get customer by idCustomer
     @GetMapping("/{idCustomer}")
     public ResponseEntity<Object> getCustomerById(@PathVariable("idCustomer") long idCustomer) {
@@ -88,12 +50,11 @@ public class CustomerController {
         return ResponseEntity.ok(customer);
     }
 
-
     //Delete Customer by idCustomer
     @DeleteMapping("/{idCustomer}")
     public ResponseEntity<Object> deleteCustomerById(@PathVariable("idCustomer") long idCustomer) {
         customerService.deleteCustomerById(idCustomer);
-        return ResponseEntity.ok("customer successfully deleted");
+        return ResponseEntity.ok("customer successfully deleted, please note that connected car(s) also have been deleted!");
     }
 
     //Update customer by idCustomer
@@ -102,8 +63,6 @@ public class CustomerController {
         customerService.updateCustomerById(idCustomer, updateCustomer);
         return ResponseEntity.ok("update customer successfully");
     }
-
-
 }
 
 

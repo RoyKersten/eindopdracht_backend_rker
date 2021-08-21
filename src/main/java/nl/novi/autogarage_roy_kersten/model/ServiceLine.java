@@ -1,10 +1,11 @@
 package nl.novi.autogarage_roy_kersten.model;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "service_line")
-
 public class ServiceLine {
 
     //attributes
@@ -36,17 +37,19 @@ public class ServiceLine {
     @Column (name = "line_total")
     private float lineTotal;
 
-
     @ManyToOne
+    @JsonIncludeProperties("idItem")
     private Item item;
 
     @ManyToOne
+    @JsonIncludeProperties("idService")
     private Service service;
 
     @ManyToOne
+    @JsonIncludeProperties("idInvoice")
     private Invoice invoice;
 
-    //constructor
+    //constructors
     public ServiceLine () {}
 
     public ServiceLine(Long idServiceLine, Long serviceLineNumber, int qty, String itemName, float price, float lineSubTotal, float vatRate, float vatAmount, float lineTotal, Item item, Service service, Invoice invoice) {
@@ -66,8 +69,6 @@ public class ServiceLine {
 
 
     //getters and setters
-
-
     public Long getIdServiceLine() {
         return idServiceLine;
     }

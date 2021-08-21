@@ -14,7 +14,7 @@ public class Repair extends Service {
     @Column (name = "issues_to_repair")
     private String issuesToRepair;
 
-    //constructor
+    //constructors
     public Repair () {}
 
     public Repair(Long idService, ServiceStatus serviceStatus) {
@@ -28,8 +28,6 @@ public class Repair extends Service {
 
 
     //getters and setters
-
-
     public String getIssuesToRepair() {
         return issuesToRepair;
     }

@@ -1,19 +1,17 @@
 package nl.novi.autogarage_roy_kersten.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import javax.persistence.*;
 import java.util.List;
 
-/**
- * The Item class is an abstract class and is the super class of Part and Activity class which are the blueprint classes.
-  */
-
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)                   // Set Strategy SINGLE_TABLE => Create one table for all subclasses with a subclass type column to differentiate between subclasses
-@DiscriminatorColumn(name = "item_type")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)                   //Set Strategy SINGLE_TABLE => Create one table for all subclasses with a subclass type column to differentiate between subclasses
+@DiscriminatorColumn(name = "item_type")                                //Subclasses of class Item can be identified in the table by item_type
 @Table(name = "item")
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
 @JsonSubTypes({
@@ -40,6 +38,10 @@ public abstract class Item {
     @Column (name = "item_category")
     private String itemCategory;
 
+    @Column (name = "status")
+    @Enumerated(EnumType.STRING)
+    private ItemStatus status;
+
     @OneToMany (mappedBy = "item")
     @JsonIgnore                                     // Ignore ServiceLine connections when item information is called
     private List<ServiceLine> serviceLine;
@@ -48,16 +50,16 @@ public abstract class Item {
     //Constructors
     public Item () {}
 
-    public Item(Long idItem, String itemName, int qty, float price, String itemCategory) {
+    public Item(Long idItem, String itemName, int qty, float price, String itemCategory,ItemStatus status) {
         this.idItem = idItem;
         this.itemName = itemName;
         this.qty = qty;
         this.price = price;
         this.itemCategory = itemCategory;
+        this.status = status;
     }
 
     //Getters and Setters
-
     public Long getIdItem() {
         return idItem;
     }
@@ -98,6 +100,14 @@ public abstract class Item {
         this.itemCategory = itemCategory;
     }
 
+    public ItemStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ItemStatus status) {
+        this.status = status;
+    }
+
     public List<ServiceLine> getServiceLine() {
         return serviceLine;
     }
@@ -105,9 +115,5 @@ public abstract class Item {
     public void setServiceLine(List<ServiceLine> serviceLine) {
         this.serviceLine = serviceLine;
     }
-
-    //Methods
-
-
 
 }

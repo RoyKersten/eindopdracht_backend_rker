@@ -12,22 +12,19 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * The CarServiceImpl class implements the methods defined in the CarService Interface and is an intermediate
- * class between the CarController class and CarRepository class.
- * The CarServiceImpl class receives information from the CarController class, adds business logic and
- * communicates with / provides information for the CarRepository class.
- * <p>
- * In the CarServiceImpl class the business logic code is written.
- * Business Logic:
- */
+ * The CarServiceImpl class implements the methods defined in the CarService Interface.
+ * The CarServiceImpl class receives information via this interface from the CarController class, adds business logic and
+ * communicates with the CarRepository interface.
+ * */
 
 @Service
 public class CarServiceImpl implements CarService{
     //Attributes
     private CarRepository carRepository;
 
-    @Autowired
+
     //Constructors
+    @Autowired
     public CarServiceImpl(CarRepository carRepository) {
         this.carRepository = carRepository;
     }
@@ -51,41 +48,40 @@ public class CarServiceImpl implements CarService{
     @Override
     public Car getCarById(long idCar) {
         if (!carRepository.existsById(idCar)) {
-            throw new RecordNotFoundException();
+            throw new RecordNotFoundException("car id does not exists");
         }
         return carRepository.findById(idCar);
     }
 
-
     //Delete Car by idCar
     @Override
     public void deleteCarById(long idCar) {
-        if (!carRepository.existsById(idCar)) {
-            throw new BadRequestException();
+         if (!carRepository.existsById(idCar)) {
+            throw new BadRequestException("car id does not exists");
         }
-        carRepository.deleteById(idCar);
-
+        try {
+            carRepository.deleteById(idCar);
+        } catch (Exception exception){
+            throw new BadRequestException("car cannot be deleted, most likely car is used in earlier inspection and/or repair service");
+        }
     }
-
 
     //Update car by idCar
     @Override
     public void updateCarById(long idCar, Car updateCar) {
-
         if (!carRepository.existsById(idCar)) {
-            throw new BadRequestException();
-
+            throw new BadRequestException("car id does not exists");
         }
         Car storedCar = carRepository.findById(idCar);
         storedCar.setBrand(updateCar.getBrand());
         storedCar.setModel(updateCar.getModel());
         storedCar.setYearOfConstruction(updateCar.getYearOfConstruction());
         storedCar.setLicensePlateNumber(updateCar.getLicensePlateNumber());
-        storedCar.setCustomer(updateCar.getCustomer());                                         //TO BE CHECKED !!!!!!!!
+        storedCar.setCustomer(updateCar.getCustomer());
         carRepository.save(updateCar);
     }
 
-
+    //Upload carPaper
     @Override
     public void uploadCarPaper(Long idCarPaper, MultipartFile file) throws IOException {
         var optionalCarPaper = carRepository.findById(idCarPaper);
@@ -98,6 +94,7 @@ public class CarServiceImpl implements CarService{
         }
     }
 
+    //Get carPaper
     @Override
     public byte[] getCarPaper(Long idCarPaper) {
         var optionalCarPaper = carRepository.findById(idCarPaper);
@@ -107,6 +104,5 @@ public class CarServiceImpl implements CarService{
             throw new RecordNotFoundException();
         }
     }
-
 
 }

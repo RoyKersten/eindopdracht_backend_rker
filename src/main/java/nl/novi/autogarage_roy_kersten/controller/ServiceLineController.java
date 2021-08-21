@@ -3,7 +3,6 @@ package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.ServiceLine;
 import nl.novi.autogarage_roy_kersten.service.ServiceLineService;
-import nl.novi.autogarage_roy_kersten.service.ServiceLineServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -11,40 +10,19 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 /**
- *POST: localhost:8080/servicelines/
- *  {
- * "serviceLineNumber": 10,
- * "qty": 1,
- * "price": 45.0,
- * "lineTotal": 45.0,
- * "itemName": "Roy",
- * "invoice": {
- *     "@type": "inspection_invoice",
- *     "idInvoice": 2
- * },
- * "item": {
- *     "@type": "activity",
- *     "idItem": 1
- * },
- * "service": {
- *     "@type": "inspection",
- *     "idService": 1
- * }
- *
- *
- *
- */
-
+ * The ServiceLineController class ensures that HTTP Requests en Responses are handled and processed further to the ServiceLineService interface.
+ **/
 
 
 @RestController
-@CrossOrigin
 @RequestMapping(value = "/servicelines")
 public class ServiceLineController {
 
+    //Attributes
     private ServiceLineService serviceLineService;
 
 
+    //Constructors
     public ServiceLineController(ServiceLineService serviceLineService) {
         this.serviceLineService = serviceLineService;
     }
@@ -83,7 +61,7 @@ public class ServiceLineController {
     }
 
 
-    //   Update Inspection by idService
+    //Update Inspection by idServiceLine
     @PutMapping("/{idServiceLine}")
     public ResponseEntity<Object> updateRepairById(@PathVariable("idServiceLine") long idServiceLine, @RequestBody ServiceLine updateServiceLine) {
         serviceLineService.updateServiceLineById(idServiceLine, updateServiceLine);

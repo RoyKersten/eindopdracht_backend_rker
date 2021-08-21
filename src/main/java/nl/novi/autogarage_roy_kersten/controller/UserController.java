@@ -10,7 +10,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Map;
-
+/**
+ * The UserController class ensures that HTTP Requests en Responses are handled and processed further to the UserService interface.
+ **/
 
 @RestController
 @RequestMapping(value = "/users")
@@ -80,7 +82,7 @@ public class UserController {
     @DeleteMapping(value = "/{username}/authorities/{authority}")
     public ResponseEntity<Object> deleteUserAuthority(@PathVariable("username") String username, @PathVariable("authority") String authority) {
         userService.removeAuthority(username, authority);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("authority successfully deleted");
     }
 
 

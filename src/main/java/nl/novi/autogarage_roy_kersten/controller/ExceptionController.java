@@ -12,21 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 @ControllerAdvice
 public class ExceptionController {
 
-    //Methods
-
     @ExceptionHandler(value = RecordNotFoundException.class)
     public ResponseEntity<Object> exception(RecordNotFoundException exception) {
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity<Object> exception(BadRequestException exception) {
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
     @ExceptionHandler(value = UsernameNotFoundException.class)
     public ResponseEntity<Object> exception(UsernameNotFoundException exception) {
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
 }

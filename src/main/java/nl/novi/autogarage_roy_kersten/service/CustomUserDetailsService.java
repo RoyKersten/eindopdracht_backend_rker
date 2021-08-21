@@ -18,11 +18,11 @@ import java.util.Set;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-
+    //Attributes
     @Autowired
     private UserService userService;
 
-
+    //Methods
     @Override
     public UserDetails loadUserByUsername(String username) {
         Optional<User> user = userService.getUser(username);

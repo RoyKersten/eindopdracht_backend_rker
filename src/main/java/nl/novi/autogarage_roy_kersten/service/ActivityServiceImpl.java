@@ -10,22 +10,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * The ActivityServiceImpl class implements the methods defined in the ActivityService Interface and is an intermediate
- * class between the ActivityController class and ActivityRepository class.
- * The ActivityServiceImpl class receives information from the ActivityController class, adds business logic and
- * communicates with / provides information for the ActivityRepository class.
- * <p>
- * In the ActivityServiceImpl class the business logic code is written.
- * Business Logic:
- */
-
+ * The ActivityServiceImpl class implements the methods defined in the ActivityService Interface.
+ * The ActivityServiceImpl class receives information via this interface from the ActivityController class, adds business logic and
+ * communicates with the ActivityRepository interface.
+* */
 
 @Service
 public class ActivityServiceImpl extends ItemServiceImpl implements ActivityService {
 
     //Attributes
     private ActivityRepository activityRepository;
-
 
     @Autowired
     //Constructors
@@ -34,7 +28,6 @@ public class ActivityServiceImpl extends ItemServiceImpl implements ActivityServ
         this.activityRepository = activityRepository;
     }
 
-
     //Methods
     //Get all Activities
     @Override
@@ -42,14 +35,11 @@ public class ActivityServiceImpl extends ItemServiceImpl implements ActivityServ
         return activityRepository.findAll();
     }
 
-
     //Update Activity by idItem
     @Override
     public void updateActivityById(long idItem, Activity updateItem) {
-
         if (!activityRepository.existsById(idItem)) {
-            throw new BadRequestException();
-
+            throw new BadRequestException("item id does not exists");
         }
         Activity storedItem = activityRepository.findById(idItem);
         storedItem.setItemName(updateItem.getItemName());

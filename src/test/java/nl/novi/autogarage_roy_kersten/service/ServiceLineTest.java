@@ -34,7 +34,6 @@ public class ServiceLineTest {
     @Captor
     ArgumentCaptor<ServiceLine> serviceLineCaptor;
 
-
     @Test
     void addServiceLineWhenQtyIsLessThenOneThrowBadRequestException() {
         ServiceLine serviceLine = new ServiceLine();
@@ -45,7 +44,6 @@ public class ServiceLineTest {
 
         //Rest of the methods invoked in addServiceLine() are tested separately by other unit tests in this class
     }
-
 
     @Test
     void getAllServiceLinesTest() {
@@ -90,15 +88,33 @@ public class ServiceLineTest {
     }
 
     @Test
-    void deleteServiceLineByIdTest() {
-        //Arrange => check if idServiceLine exists and return boolean true to pass BadRequestException check
+    void deleteServiceLineByIdTestWhenInvoiceIsNotNullThenThrowBadRequest() {
+        //Arrange => check if idServiceLine exists and return boolean true to pass BadRequestException check. invoice is not null, BadRequestException will be thrown
+        Invoice invoice = new InspectionInvoice();
+        ServiceLine serviceLine = new ServiceLine(1L,1L,5,"Test Item",100.0f,200.0f,0.21f,42.0f,0.0f,null,null,invoice);
+
         when(serviceLineRepository.existsById(1L)).thenReturn(true);
+        when(serviceLineRepository.findById(1L)).thenReturn(serviceLine);
+
+        //Act => call method deleteServiceLineById
+        assertThrows(BadRequestException.class, () ->  serviceLineService.deleteServiceLineById(1L));
+    }
+
+    @Test
+    void deleteServiceLineByIdTestWhenInvoiceIsNullThenThrowNullPointerException() {
+        //Arrange => check if idServiceLine exists and return boolean true to pass BadRequestException check
+        ServiceLine serviceLine = new ServiceLine(1L,1L,5,"Test Item",100.0f,200.0f,0.21f,42.0f,0.0f,null,null,null);
+
+        when(serviceLineRepository.existsById(1L)).thenReturn(true);
+        when(serviceLineRepository.findById(1L)).thenReturn(serviceLine);
 
         //Act => call method deleteServiceLineById
         assertThrows(NullPointerException.class, () ->  serviceLineService.deleteServiceLineById(1L));
 
-        //Method: updateInventoryAfterDeleteServiceLine(idServiceLine) is Tested separately (see last unit test in this class) !
+        //!!! Method: updateInventoryAfterDeleteServiceLine(idServiceLine) is Tested separately (see last unit test in this class) !
     }
+
+
 
     @Test
     void updateServiceLineByIdTest() {
@@ -116,21 +132,20 @@ public class ServiceLineTest {
         verify(serviceLineRepository, times(1)).findById(1L);
 
         //Rest of the methods invoked in addServiceLine() are tested separately by other unit tests in this class
-
     }
 
     @Test
-    void reverseInventoryTest() {
-        //Arrange p
+    void reverseInventoryInitialTransactionInCaseOfPartTest() {
+        //Arrange
         //To succeed the test new part Qty should be = 5 (inventory qty = 3, serviceLine qty = 2)
-        Part initialPart = new Part (1L, "stored Test Item", 3, 100.0f, "Test", "Test");
+        Part initialPart = new Part (1L, "stored Test Item", 3, 100.0f, "Test", "Test",ItemStatus.LOCKED);
         ServiceLine storedServiceLine = new ServiceLine(1L,1L,2,"initial Test Item",100.0f,100.0f,0.21f,21.0f,121.0f,initialPart,null,null);
 
         when(itemRepository.findById(1L)).thenReturn(initialPart);
         when(serviceLineRepository.findById(1L)).thenReturn(storedServiceLine);
 
         //Act
-        serviceLineService.reverseInventory(1L);
+        serviceLineService.reverseInventoryInitialTransaction(1L);
 
         //Assert
         verify(itemRepository, times(1)).findById(1L);                                     //verify if intemRepository.findById is called one time
@@ -141,33 +156,53 @@ public class ServiceLineTest {
 
     }
 
+    @Test
+    void reverseInventoryInitialTransactionInCaseOfActivityTest() {
+        //Arrange
+        //To succeed the test new part Qty should be = 5 (inventory qty = 3, serviceLine qty = 2)
+        Activity activity = new Activity(1L, "remmen vervangen", 1, 100.00f, "keuring",ItemStatus.LOCKED);
+        ServiceLine storedServiceLine = new ServiceLine(1L,1L,2,"remmen vervangen",100.0f,100.0f,0.21f,21.0f,121.0f,activity,null,null);
 
+        when(itemRepository.findById(1L)).thenReturn(activity);
+        when(serviceLineRepository.findById(1L)).thenReturn(storedServiceLine);
+
+        //Act
+        serviceLineService.reverseInventoryInitialTransaction(1L);
+
+        //Assert
+        verify(itemRepository, times(1)).findById(1L);                                     //verify if intemRepository.findById is invoked one time
+        verify(serviceLineRepository, times(1)).findById(1L);                        //verify if serviceLineRepository.findById is invoked one time
+
+        long qty = itemRepository.findById(1L).getQty();                                                          //Get Qty mock item
+        assertThat(qty).isEqualTo(1);                                                                                   //check if inventory level of Activity has not been reversed with Qty of serviceLine
+
+    }
 
     @Test
-    void checkInventoryLevelWhenLessThenZeroThrowBadRequestException() {
+    void checkInventoryLevelNewTransactionPartWhenLessThenZeroThrowBadRequestException() {
         //Arrange =>
         //To succeed the test: stock qty of part = 1, serviceLine qty = 2  (result: 1 - 2 = -1, not sufficient inventory available)
-        Part part = new Part (1L, "Test Item", 1, 100.0f, "Test", "Test");
+        Part part = new Part (1L, "Test Item", 1, 100.0f, "Test", "Test",ItemStatus.LOCKED);
         ServiceLine serviceLine = new ServiceLine(1L,1L,2,"Test Item",100.0f,100.0f,0.21f,21.0f,121.0f,part,null,null);
 
         when(itemRepository.findById(1L)).thenReturn(part);
 
         //Act & Assert
         assertThat(part.getQty()).isLessThan(serviceLine.getQty());                                                     //Compare Qty mock item with serviceLine Qty
-        assertThrows(BadRequestException.class, () -> serviceLineService.checkInventoryLevel(serviceLine));             //check if BadRequestException will be Thrown
+        assertThrows(BadRequestException.class, () -> serviceLineService.checkInventoryLevelNewTransaction(serviceLine));             //check if BadRequestException will be Thrown
     }
 
     @Test
-    void checkInventoryLevelWhenLargerThenZeroDoNotThrowBadRequestException() {
+    void checkInventoryLevelNewTransactionPartWhenLargerThenZeroDoNotThrowBadRequestException() {
         //Arrange => stock qty of part = 5, serviceLine qty = 1
         //To succeed the test: stock qty of part = 5, serviceLine qty = 1  (result: 5 - 1 = 4, sufficient inventory available)
-        Part part = new Part (1L, "Test Item", 5, 100.0f, "Test", "Test");
+        Part part = new Part (1L, "Test Item", 5, 100.0f, "Test", "Test",ItemStatus.LOCKED);
         ServiceLine serviceLine = new ServiceLine(1L,1L,2,"Test Item",100.0f,100.0f,0.21f,21.0f,121.0f,part,null,null);
 
         when(itemRepository.findById(1L)).thenReturn(part);
 
         //Act
-        serviceLineService.checkInventoryLevel(serviceLine);
+        serviceLineService.checkInventoryLevelNewTransaction(serviceLine);
 
         //Assert
         verify(itemRepository, times(1)).findById(1L);                                     //verify if itemRepository.findById has bene called one time
@@ -175,18 +210,17 @@ public class ServiceLineTest {
         assertThat(qty).isGreaterThan(serviceLine.getQty());                                                            //Compare Qty mock item with serviceLine Qty
     }
 
-
     @Test
-    void checkInventoryLevelWhenEqualToZeroDoNotThrowBadRequestException() {
+    void checkInventoryLevelNewTransactionPartWhenEqualToZeroDoNotThrowBadRequestException() {
         //Arrange =>
         //To succeed the test: stock qty of part = 2, serviceLine qty = 2  (result: 2 - 2 = 0, sufficient inventory available)
-        Part part = new Part (1L, "Test Item", 2, 100.0f, "Test", "Test");
+        Part part = new Part (1L, "Test Item", 2, 100.0f, "Test", "Test",ItemStatus.LOCKED);
         ServiceLine serviceLine = new ServiceLine(1L,1L,2,"Test Item",100.0f,100.0f,0.21f,21.0f,121.0f,part,null,null);
 
         when(itemRepository.findById(1L)).thenReturn(part);
 
         //Act
-        serviceLineService.checkInventoryLevel(serviceLine);
+        serviceLineService.checkInventoryLevelNewTransaction(serviceLine);
 
         //Assert
         verify(itemRepository, times(1)).findById(1L);                                     //verify if itemRepository.findById has bene called one time
@@ -213,21 +247,44 @@ public class ServiceLineTest {
         }
 
     @Test
-    void setServiceLinePriceTest() {
-        //Arrange => create a serviceLine mock with serviceLine price = 0, price of part is 100.0f, serviceLine price should be 100.0f after test
-        Part part = new Part (1L, "Test Item", 2, 100.0f, "Test", "Test");
-        ServiceLine serviceLine = new ServiceLine(1L,1L,2,"Test Item",0.0f,0.0f,0.0f,0.0f,0.0f,part,null,null);
+    void setServiceLinePriceItemStatusLockedTest() {
+        //Arrange => create a serviceLine mock with serviceLine price = 50, price of part is 100.0f, serviceLine price should be 100.0f after test as ItemStatus is "LOCKED"
+        Part part = new Part (1L, "Test Item", 2, 100.0f, "Test", "Test",ItemStatus.LOCKED);
+        ServiceLine serviceLine = new ServiceLine(1L,1L,2,"Test Item",50.0f,0.0f,0.0f,0.0f,0.0f,part,null,null);
 
         when(serviceLineRepository.save(serviceLine)).thenReturn(serviceLine);
         when(itemRepository.findById(1L)).thenReturn(part);
 
         //Act
-        ServiceLine validateServiceLine = serviceLineService.setServiceLinePrice(serviceLine);
+        ServiceLine validateServiceLine = serviceLineService.setServiceLinePriceItemStatusLocked(serviceLine);
 
         //Assert
         verify(serviceLineRepository, times(2)).save(serviceLine);
-        assertThat(validateServiceLine.getPrice()).isEqualTo(100.0f);                                                   //check if serviceLine price is set to 100.0f
-        }
+        assertThat(validateServiceLine.getPrice()).isEqualTo(100.0f);                                                   //check if serviceLine price is taken from the Item and from the serviceLine
+    }
+
+    @Test
+    void setServiceLinePriceItemStatusOpen() {
+        //Arrange => create a serviceLine mock with serviceLine price = 100, price of activity is 0.0f, serviceLine price should have 100.0f after test as ItemStatus is "OPEN"
+        Activity activity = new Activity(1L, "overige handelingen", 1, 0.00f, "keuring",ItemStatus.OPEN);
+        ServiceLine serviceLine = new ServiceLine(1L,1L,2,"remmen vervangen",100.0f,100.0f,0.21f,21.0f,121.0f,activity,null,null);
+        ServiceLine storedServiceLine = new ServiceLine(1L,1L,1,"test",20.0f,100.0f,0.21f,21.0f,121.0f,activity,null,null);
+
+        when(serviceLineRepository.save(storedServiceLine)).thenReturn(storedServiceLine);
+        when(itemRepository.findById(1L)).thenReturn(activity);
+
+        //Act
+        serviceLineService.setServiceLinePriceItemStatusOpen(serviceLine, storedServiceLine);
+
+        //Assert
+        verify(serviceLineRepository,times(1)).save(serviceLineCaptor.capture());
+        ServiceLine validateServiceLine = serviceLineCaptor.getValue();
+
+        verify(serviceLineRepository, times(1)).save(storedServiceLine);
+        assertThat(validateServiceLine.getPrice()).isEqualTo(100.0f);                                                   ///check if serviceLine price fro the storedServiceLine is taken from the serviceLine and not from the item
+
+    }
+
 
     @Test
     void calculateLineSubtotalTest() {
@@ -292,7 +349,7 @@ public class ServiceLineTest {
     @Test
     void setItemNameTest() {
         //Arrange => create a Item mock and a serviceLine mock with item name null, after test item name in serviceLine should be "Test Item", taken from the item
-        Part part = new Part (1L, "Test Item", 2, 100.0f, "Test", "Test");
+        Part part = new Part (1L, "Test Item", 2, 100.0f, "Test", "Test",ItemStatus.LOCKED);
         ServiceLine serviceLine = new ServiceLine(1L,1L,2,null,100.0f,200.0f,0.21f,42.0f,0.0f,part,null,null);
 
         when(serviceLineRepository.save(serviceLine)).thenReturn(serviceLine);
@@ -310,7 +367,7 @@ public class ServiceLineTest {
     void updateInventoryTest() {
         //Arrange => create a Item mock and a serviceLine mock with item name null, after test item name in serviceLine should be "Test Item", taken from the item
         //New inventory Qty should be 7 - 5 = 2 to succeed the Test
-        Part part = new Part (1L,"Test Item",7,100.0f,"Test","Test");
+        Part part = new Part (1L,"Test Item",7,100.0f,"Test","Test",ItemStatus.LOCKED);
 
         ServiceLine serviceLine = new ServiceLine(1L,1L,5,"Test Item",100.0f,200.0f,0.21f,42.0f,0.0f,part,null,null);
 
@@ -333,7 +390,7 @@ public class ServiceLineTest {
     void updateInventoryAfterDeleteServiceLine() {
         //Arrange => create a Item mock and a serviceLine mock with item name null, after test item name in serviceLine should be "Test Item", taken from the item
         //New inventory Qty should be 7 + 5 = 12 to succeed the Test
-        Part part = new Part (1L,"Test Item",7,100.0f,"Test","Test");
+        Part part = new Part (1L,"Test Item",7,100.0f,"Test","Test",ItemStatus.LOCKED);
         ServiceLine serviceLine = new ServiceLine(1L,1L,5,"Test Item",100.0f,200.0f,0.21f,42.0f,0.0f,part,null,null);
 
         when(serviceLineRepository.getById(1L)).thenReturn(serviceLine);

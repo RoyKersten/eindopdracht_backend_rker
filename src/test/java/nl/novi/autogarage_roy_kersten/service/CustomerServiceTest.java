@@ -22,10 +22,8 @@ class CustomerServiceTest {
     @Mock
     CustomerRepository customerRepository;
 
-
     @InjectMocks
     CustomerServiceImpl customerService;
-
 
     @Captor
     ArgumentCaptor<Customer> customerCaptor;

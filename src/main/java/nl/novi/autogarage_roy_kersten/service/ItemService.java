@@ -1,7 +1,6 @@
 package nl.novi.autogarage_roy_kersten.service;
 
 import nl.novi.autogarage_roy_kersten.model.Item;
-import nl.novi.autogarage_roy_kersten.model.Service;
 
 public interface ItemService {
 

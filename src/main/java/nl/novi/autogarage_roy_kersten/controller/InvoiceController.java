@@ -2,17 +2,21 @@ package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Invoice;
 import nl.novi.autogarage_roy_kersten.service.InvoiceService;
-import nl.novi.autogarage_roy_kersten.service.InvoiceServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+/**
+ * The InvoiceController class ensures that HTTP Requests en Responses are handled and processed further to the InvoiceService interface.
+ **/
 
 public abstract class InvoiceController {
 
+    //Attributes
     private InvoiceService invoiceService;
 
+    //Constructors
     public InvoiceController(InvoiceService invoiceService) {
         this.invoiceService = invoiceService;
     }
@@ -28,14 +32,12 @@ public abstract class InvoiceController {
         return ResponseEntity.created(location).body(location);
     }
 
-
     //Get Invoice by idInvoices
     @GetMapping("/{idInvoice}")
     public ResponseEntity<Object> getInvoiceById(@PathVariable("idInvoice") long idInvoice) {
         Invoice invoice = invoiceService.getInvoiceById(idInvoice);
         return ResponseEntity.ok(invoice);
     }
-
 
     //Delete Invoice by idInvoice
     @DeleteMapping("/{idInvoice}")
@@ -51,13 +53,10 @@ public abstract class InvoiceController {
         return ResponseEntity.ok("update Invoice successfully");
     }
 
-
     //Update InvoiceStatus by idInvoice
-    @PutMapping("/status/{idInvoice}")
+    @PatchMapping("/status/{idInvoice}")
     public ResponseEntity<Object> updateInvoiceStatusById(@PathVariable("idInvoice") long idInvoice, @RequestBody Invoice updateInvoice) {
         invoiceService.updateInvoiceStatusById(idInvoice, updateInvoice);
         return ResponseEntity.ok("update InvoiceStatus successfully");
     }
-
-
 }

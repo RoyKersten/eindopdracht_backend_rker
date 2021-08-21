@@ -5,19 +5,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.List;
 
-
 /**
  * The Car class is the blueprint for all Car objects.
- * A Car object contains all basic information of a car like: brand, model, year_of_construction and license_plate_number.
+ * A Car object contains all basic information of a car like: brand, model, year_of_construction, license_plate_number and carPaper.
  */
 
 @Entity
 @Table(name = "car")
-
-//@JsonIgnoreProperties ({"service", "customer"})           /JSON ignore at class level
 public class Car {
 
-    // Attributes
+    //Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCar;
@@ -35,7 +32,7 @@ public class Car {
     private String licensePlateNumber;
 
     @OneToMany (mappedBy = "car")
-    @JsonIgnore                         //Json ignore at field level
+    @JsonIgnore
     private List<Service> service;
 
     @ManyToOne
@@ -44,7 +41,7 @@ public class Car {
     @Lob
     byte[] carPaper;
 
-    // Constructors
+    //Constructors
     public Car() {}
 
     public Car(Long idCar, String brand, String model, String yearOfConstruction, String licensePlateNumber) {
@@ -53,7 +50,6 @@ public class Car {
         this.model = model;
         this.yearOfConstruction = yearOfConstruction;
         this.licensePlateNumber = licensePlateNumber;
-
     }
 
 
@@ -98,7 +94,6 @@ public class Car {
         this.licensePlateNumber = licensePlateNumber;
     }
 
-
     public Customer getCustomer() {
         return customer;
     }
@@ -122,9 +117,6 @@ public class Car {
     public void setCarPaper(byte[] carPaper) {
         this.carPaper = carPaper;
     }
-
-//Methods
-
 
 }
 

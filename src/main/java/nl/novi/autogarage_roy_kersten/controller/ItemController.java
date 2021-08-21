@@ -2,17 +2,22 @@ package nl.novi.autogarage_roy_kersten.controller;
 
 import nl.novi.autogarage_roy_kersten.model.Item;
 import nl.novi.autogarage_roy_kersten.service.ItemService;
-import nl.novi.autogarage_roy_kersten.service.ItemServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+/**
+ * The ItemController class ensures that HTTP Requests en Responses are handled and processed further to the ItemService interface.
+ **/
 
 public abstract class ItemController {
-   private ItemService itemService;
 
-   public ItemController(ItemService itemService) {
+    //Attributes
+    private ItemService itemService;
+
+    //Constructors
+    public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
 
@@ -27,14 +32,12 @@ public abstract class ItemController {
         return ResponseEntity.created(location).body(location);
     }
 
-
-    //Get Item by idItem, can be defined in abstract class Item as it works for Part and Activity
+    //Get Item by idItem
     @GetMapping("/{idItem}")
     public ResponseEntity<Object> getItemById(@PathVariable("idItem") long idItem) {
         Item item = itemService.getItemById(idItem);
         return ResponseEntity.ok(item);
     }
-
 
     //Delete Item by idItem
     @DeleteMapping("/{idItem}")
@@ -42,7 +45,5 @@ public abstract class ItemController {
         itemService.deleteItemById(idItem);
         return ResponseEntity.ok("item successfully deleted");
     }
-
-
 
 }

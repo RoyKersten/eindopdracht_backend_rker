@@ -2,16 +2,18 @@ package nl.novi.autogarage_roy_kersten.service;
 
 import nl.novi.autogarage_roy_kersten.exception.BadRequestException;
 import nl.novi.autogarage_roy_kersten.model.*;
-import nl.novi.autogarage_roy_kersten.repository.*;
+import nl.novi.autogarage_roy_kersten.repository.CustomerRepository;
+import nl.novi.autogarage_roy_kersten.repository.InvoiceRepository;
+import nl.novi.autogarage_roy_kersten.repository.ServiceLineRepository;
+import nl.novi.autogarage_roy_kersten.repository.ServiceRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.core.io.ClassPathResource;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +22,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-public class InspectionInvoiceServiceTest extends InvoiceServiceTest {
+@ExtendWith(MockitoExtension.class)
+public class InspectionInvoiceServiceTest  {
 
     @Mock
-    InspectionInvoiceRepository inspectionInvoiceRepository;
+    InvoiceRepository invoiceRepository;
 
     @Mock
     CustomerRepository customerRepository;
@@ -42,25 +45,40 @@ public class InspectionInvoiceServiceTest extends InvoiceServiceTest {
 
 
     @Test
-    @Override
-    void createInvoice() {
+    void checkIfServiceIsInvoicedAlreadyWhenYesThrowBadRequestException(){
         //Arrange create mock objects for test
-        InspectionInvoice inspectionInvoice = new InspectionInvoice(1L, InvoiceStatus.BETAALD,0,0,0,0,null,null,null,null);
+        Inspection inspection = new Inspection();
+        List<ServiceLine> serviceLines = new ArrayList<>();
+        Customer customer = new Customer();
+        InspectionInvoice inspectionInvoice = new InspectionInvoice(1L, InvoiceStatus.BETAALD,100.0f,0.21f,21.0f,121,"D:/test/invoice",serviceLines,customer,inspection);
 
-        when(invoiceRepository.save(inspectionInvoice)).thenReturn(inspectionInvoice);
+        when(invoiceRepository.findInvoiceByService(inspection)).thenReturn(inspectionInvoice);
 
-        //Act & Assert => call method inspectionInvoiceService which will throw a NullPointerException, Test of subMethods will be done separately
-        assertThrows(NullPointerException.class, () ->  inspectionInvoiceService.createInvoice(inspectionInvoice));
+        //Act
+        assertThrows(BadRequestException.class, () -> inspectionInvoiceService.checkIfServiceIsInvoicedAlready(inspectionInvoice));
 
-        verify(invoiceRepository, times(2)).save(inspectionInvoice);
-        assertThat(inspectionInvoice.getInvoiceStatus()).isEqualTo(InvoiceStatus.OPEN);                                 //check if invoice status has been set to OPEN
-
-        //Rest of the methods invoked in createInvoice() are tested separately by other unit tests in this class
+        //Assert
+        verify(invoiceRepository, times(1)).findInvoiceByService(inspection);
     }
 
     @Test
-    @Override
-    void getInvoiceById() {
+    void checkIfServiceLineIsAvailableForInvoicingWhenNotAvailableThrowBadRequestException() {
+        //Arrange create mock objects for test
+        Inspection inspection = new Inspection (1L, null , ServiceStatus.UITVOEREN ,null,"keuring auto", null, null);
+        InspectionInvoice inspectionInvoice = new InspectionInvoice(1L, InvoiceStatus.BETAALD,100.0f,0.21f,21.0f,121,"D:/test/invoice",null,null,inspection);
+
+        when(serviceRepository.findById(1L)).thenReturn(inspection);
+
+        //Act
+        assertThrows(NullPointerException.class, () -> inspectionInvoiceService.checkIfServiceLineIsAvailableForInvoicing(inspectionInvoice));
+
+        //Assert
+        verify(serviceRepository, times(1)).findById(1L);
+    }
+
+
+    @Test
+    void getInvoiceByIdTest() {
         //Arrange create mock objects for test
         Inspection inspection = new Inspection();
         List<ServiceLine> serviceLines = new ArrayList<>();
@@ -88,21 +106,48 @@ public class InspectionInvoiceServiceTest extends InvoiceServiceTest {
     }
 
     @Test
-    @Override
-    void deleteInvoiceById() {
+    void deleteInvoiceByIdWhenInvoiceStatusOpenThenExecute() {
         //Arrange => check if idInvoice exists and return boolean true to pass BadRequestException check
+        Inspection inspection = new Inspection();
+        List<ServiceLine> serviceLines = new ArrayList<>();
+        Customer customer = new Customer();
+
+        InspectionInvoice inspectionInvoice = new InspectionInvoice(1L, InvoiceStatus.OPEN,100.0f,0.21f,21.0f,121,"D:/test/invoice",serviceLines,customer,inspection);
+
         when(invoiceRepository.existsById(1L)).thenReturn(true);
+        when(invoiceRepository.findById(1L)).thenReturn(inspectionInvoice);
 
         //Act => call method deleteInvoiceById
         inspectionInvoiceService.deleteInvoiceById(1L);
 
         //Assert => verify if mock invoiceRepository.deleteById has been called one time
+        verify(invoiceRepository, times(1)).existsById(1L);
         verify(invoiceRepository, times(1)).deleteById(1L);
+        verify(invoiceRepository, times(1)).findById(1L);
     }
 
+    @Test
+    void deleteInvoiceByIdWhenInvoiceStatusBetaaldThenThrowBadRequest() {
+        //Arrange => check if idInvoice exists and return boolean true to pass BadRequestException check
+        Inspection inspection = new Inspection();
+        List<ServiceLine> serviceLines = new ArrayList<>();
+        Customer customer = new Customer();
+
+        InspectionInvoice inspectionInvoice = new InspectionInvoice(1L, InvoiceStatus.BETAALD,100.0f,0.21f,21.0f,121,"D:/test/invoice",serviceLines,customer,inspection);
+
+        when(invoiceRepository.existsById(1L)).thenReturn(true);
+        when(invoiceRepository.findById(1L)).thenReturn(inspectionInvoice);
+
+        //Act => call method deleteInvoiceById
+        assertThrows(BadRequestException.class, () -> inspectionInvoiceService.deleteInvoiceById(1L));
+
+        //Assert => verify if mock invoiceRepository.deleteById has been called one time
+        verify(invoiceRepository, times(1)).existsById(1L);
+        verify(invoiceRepository, times(1)).findById(1L);
+    }
 
     @Test
-    void updateInvoiceById() {
+    void updateInvoiceByIdTest() {
         //Arrange create mock objects for test
         Inspection inspection = new Inspection();
         List<ServiceLine> serviceLines = new ArrayList<>();
@@ -113,10 +158,9 @@ public class InspectionInvoiceServiceTest extends InvoiceServiceTest {
         when(invoiceRepository.existsById(1L)).thenReturn(true);
         when(invoiceRepository.findById(1L)).thenReturn(inspectionInvoice);
 
-
         //Assert
         //Ensure NullPointerException is Thrown and tested by setting Qty to 0
-        assertThrows(NullPointerException.class, () -> inspectionInvoiceService.updateInvoiceById(1L, inspectionInvoice));
+        assertThrows(BadRequestException.class, () -> inspectionInvoiceService.updateInvoiceById(1L, inspectionInvoice));
         verify(invoiceRepository, times(1)).existsById(1L);
         verify(invoiceRepository, times(1)).findById(1L);
 
@@ -124,8 +168,7 @@ public class InspectionInvoiceServiceTest extends InvoiceServiceTest {
     }
 
     @Test
-    @Override
-    void updateInvoiceStatusById() {
+    void updateInvoiceStatusByIdTest() {
         //Arrange create mock objects for test
         Inspection inspection = new Inspection();
         List<ServiceLine> serviceLines = new ArrayList<>();
@@ -179,7 +222,6 @@ public class InspectionInvoiceServiceTest extends InvoiceServiceTest {
         verify(invoiceRepository, times(2)).save(inspectionInvoice);
 
         assertThat(inspectionInvoice.getCustomer()).isEqualTo(customer);                                                //check if inspection has been updated with customer
-
     }
 
     @Test
@@ -257,7 +299,39 @@ public class InspectionInvoiceServiceTest extends InvoiceServiceTest {
     }
 
     @Test
-    void printInvoiceTest() {
+    void printInvoiceHeaderTest() {
+        //Arrange create mock objects for test
+        List<ServiceLine> serviceLines = new ArrayList<>();
+        Customer customer = new Customer(1L,"Voornaam", "Achternaam","06","voornaam.achternaam@mail");
+        LocalDate date = LocalDate.of(2020, 6, 8);
+
+        Inspection inspection = new Inspection (1L, date , ServiceStatus.UITVOEREN ,customer,"keuring auto", serviceLines, null);
+        ServiceLine serviceLine = new ServiceLine(1L,1L,1,"keuring auto",45.0f,45.0f,0.21f,9.45f,54.45f,null,inspection,null);
+        InspectionInvoice inspectionInvoice = new InspectionInvoice(1L, InvoiceStatus.OPEN,45.0f,0.21f,9.45f,54.45f, "src/test/resources/inspectionInvoiceTest.txt",serviceLines,customer,inspection);
+
+        serviceLines.add(serviceLine);
+
+        when(invoiceRepository.save(inspectionInvoice)).thenReturn(inspectionInvoice);
+        when(serviceRepository.findById(1L)).thenReturn(inspection);
+
+        //Act
+        inspectionInvoiceService.printInvoiceHeader(inspectionInvoice);
+
+        //Assert
+        verify(serviceRepository, times(1)).findById(1L);
+        verify(invoiceRepository).save(invoiceCaptor.capture());
+        Invoice validateInvoice = invoiceCaptor.getValue();
+
+        assertThat(validateInvoice.getIdInvoice()).isEqualTo(1L);
+        assertThat(validateInvoice.getInvoiceStatus()).isEqualTo(InvoiceStatus.OPEN);
+        assertThat(validateInvoice.getInvoiceSubtotal()).isEqualTo(45.0f);
+        assertThat(validateInvoice.getVatAmount()).isEqualTo(9.450f);
+        assertThat(validateInvoice.getInvoiceTotal()).isEqualTo(54.45f);
+        assertThat(validateInvoice.getPathName()).isEqualTo("src/test/resources/inspectionInvoiceTest.txt");
+    }
+
+    @Test
+    void printInvoiceLinesTest() {
         //Arrange create mock objects for test
         List<ServiceLine> serviceLines = new ArrayList<>();
         Customer customer = new Customer(1L,"Voornaam", "Achternaam","06","voornaam.achternaam@mail");
@@ -275,7 +349,7 @@ public class InspectionInvoiceServiceTest extends InvoiceServiceTest {
         when(serviceLineRepository.countByServiceIdService(1L)).thenReturn(serviceLines.get(0).getIdServiceLine());
 
         //Act
-        inspectionInvoiceService.printInvoice(inspectionInvoice);
+        inspectionInvoiceService.printInvoiceLines(inspectionInvoice);
 
         //Assert
         verify(serviceRepository, times(1)).findById(1L);
@@ -291,7 +365,29 @@ public class InspectionInvoiceServiceTest extends InvoiceServiceTest {
         assertThat(validateInvoice.getVatAmount()).isEqualTo(9.450f);
         assertThat(validateInvoice.getInvoiceTotal()).isEqualTo(54.45f);
         assertThat(validateInvoice.getPathName()).isEqualTo("src/test/resources/inspectionInvoiceTest.txt");
-
     }
 
+    @Test
+    void printInvoiceTotalTest() {
+        //Arrange create mock objects for test
+        List<ServiceLine> serviceLines = new ArrayList<>();
+        Customer customer = new Customer(1L,"Voornaam", "Achternaam","06","voornaam.achternaam@mail");
+        LocalDate date = LocalDate.of(2020, 6, 8);
+
+        Inspection inspection = new Inspection (1L, date , ServiceStatus.UITVOEREN ,customer,"keuring auto", serviceLines, null);
+        ServiceLine serviceLine = new ServiceLine(1L,1L,1,"keuring auto",45.0f,45.0f,0.21f,9.45f,54.45f,null,inspection,null);
+        InspectionInvoice inspectionInvoice = new InspectionInvoice(1L, InvoiceStatus.OPEN,45.0f,0.21f,9.45f,54.45f, "src/test/resources/inspectionInvoiceTest.txt",serviceLines,customer,inspection);
+        serviceLines.add(serviceLine);
+
+        //Act
+        inspectionInvoiceService.printInvoiceTotal(inspectionInvoice);
+
+        //Assert
+        assertThat(inspectionInvoice.getIdInvoice()).isEqualTo(1L);
+        assertThat(inspectionInvoice.getInvoiceStatus()).isEqualTo(InvoiceStatus.OPEN);
+        assertThat(inspectionInvoice.getInvoiceSubtotal()).isEqualTo(45.0f);
+        assertThat(inspectionInvoice.getVatAmount()).isEqualTo(9.45f);
+        assertThat(inspectionInvoice.getInvoiceTotal()).isEqualTo(54.45f);
+        assertThat(inspectionInvoice.getPathName()).isEqualTo("src/test/resources/inspectionInvoiceTest.txt");
+    }
 }

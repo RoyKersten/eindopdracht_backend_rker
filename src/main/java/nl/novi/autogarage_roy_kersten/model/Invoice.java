@@ -1,17 +1,15 @@
 package nl.novi.autogarage_roy_kersten.model;
 
 import com.fasterxml.jackson.annotation.*;
-import nl.novi.autogarage_roy_kersten.model.Customer;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-// Set Strategy SINGLE_TABLE => Create one table for all subclasses with a subclass type column to differentiate between subclasses
-@DiscriminatorColumn(name = "invoice_type")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)           //Set Strategy SINGLE_TABLE => Create one table for all subclasses with a subclass type column to differentiate between subclasses
+@DiscriminatorColumn(name = "invoice_type")                     //Subclasses of class Invoice can be identified in the table by invoice_type
 @Table(name = "invoice")
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
 @JsonSubTypes({
@@ -48,12 +46,15 @@ public abstract class Invoice {
 
     @OneToMany (mappedBy = "invoice")
     @JsonIgnore
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<ServiceLine> serviceLine;
 
     @ManyToOne
+    @JsonIncludeProperties("idCustomer")
     private Customer customer;
 
     @OneToOne
+    @JsonIncludeProperties("idService")
     private Service service;
 
     //Constructors
@@ -74,7 +75,6 @@ public abstract class Invoice {
     }
 
     //Getters and Setters
-
     public Long getIdInvoice() {
         return idInvoice;
     }
@@ -154,9 +154,6 @@ public abstract class Invoice {
     public void setPathName(String pathName) {
         this.pathName = pathName;
     }
-
-    //Methods
-
 
 }
 
