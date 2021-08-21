@@ -14,6 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -301,11 +304,12 @@ public class RepairInvoiceServiceTest {
 
 
     @Test
-    void printInvoiceHeaderTest() {
+    void printInvoiceHeaderTest() throws IOException {
         //Arrange create mock objects for test
         List<ServiceLine> serviceLines = new ArrayList<>();
         Customer customer = new Customer(1L,"Voornaam", "Achternaam","06","voornaam.achternaam@mail");
         LocalDate date = LocalDate.of(2020, 6, 8);
+        Files.createDirectories(Paths.get("src/test/resources/"));
 
         Repair repair = new Repair (1L, date , ServiceStatus.UITVOEREN ,customer,"banden profiel te laag < 2mm, remmen achter vervangen", serviceLines, null);
         ServiceLine serviceLine = new ServiceLine(1L,1L,2,"Test Item",100.0f,200.0f,0.21f,42.0f,242.0f,null,repair,null);
@@ -329,11 +333,12 @@ public class RepairInvoiceServiceTest {
 
 
     @Test
-    void printInvoiceLinesTest() {
+    void printInvoiceLinesTest() throws IOException {
         //Arrange create mock objects for test
         List<ServiceLine> serviceLines = new ArrayList<>();
         Customer customer = new Customer(1L,"Voornaam", "Achternaam","06","voornaam.achternaam@mail");
         LocalDate date = LocalDate.of(2020, 6, 8);
+        Files.createDirectories(Paths.get("src/test/resources/"));
 
         Repair repair = new Repair (1L, date , ServiceStatus.UITVOEREN ,customer,"banden profiel te laag < 2mm, remmen achter vervangen", serviceLines, null);
         ServiceLine serviceLine = new ServiceLine(1L,1L,2,"Test Item",100.0f,200.0f,0.21f,42.0f,242.0f,null,repair,null);
@@ -366,11 +371,12 @@ public class RepairInvoiceServiceTest {
     }
 
     @Test
-    void printInvoiceTotalTest() {
+    void printInvoiceTotalTest() throws IOException {
         //Arrange create mock objects for test
         List<ServiceLine> serviceLines = new ArrayList<>();
         Customer customer = new Customer(1L,"Voornaam", "Achternaam","06","voornaam.achternaam@mail");
         LocalDate date = LocalDate.of(2020, 6, 8);
+        Files.createDirectories(Paths.get("src/test/resources/"));
 
         Repair repair = new Repair (1L, date , ServiceStatus.UITVOEREN ,customer,"banden profiel te laag < 2mm, remmen achter vervangen", serviceLines, null);
         ServiceLine serviceLine1 = new ServiceLine(1L,1L,2,"Test Item",100.0f,200.0f,0.21f,42.0f,242.0f,null,repair,null);
